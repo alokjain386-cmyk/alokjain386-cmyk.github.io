@@ -1,0 +1,444 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>kalaNDR - Smart Vedic Calendar</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#1f2a7a"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=Tiro+Devanagari+Hindi&family=Hind:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/astronomy-engine@2.1.19/astronomy.browser.min.js"></script>
+<style>
+:root{--bg:#f3f2f8;--fg:#1b1e3c;--mu:#62668a;--cd:#fff;--ln:#d9d8e8;--ac:#1f2a7a;--lit:#f6dd96;--dk:#2a2f55;--fe:#ffe7b8;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#11142a;--fg:#e9e8f5;--mu:#9a9dc2;--cd:#1a1e3d;--ln:#2e3360;--ac:#9fb0ff;--dk:#3a4075;--fe:#4a3a1a}}
+:root[data-theme="dark"]{--bg:#11142a;--fg:#e9e8f5;--mu:#9a9dc2;--cd:#1a1e3d;--ln:#2e3360;--ac:#9fb0ff;--dk:#3a4075;--fe:#4a3a1a}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 Hind,system-ui,sans-serif}
+main{max-width:980px;margin:0 auto;padding:20px 14px 40px}
+h1{font:400 clamp(1.6rem,6.5vw,2.5rem)/1.15 "Tiro Devanagari Hindi",Georgia,serif;margin:0;color:var(--ac)}h2,h3{font-family:"Tiro Devanagari Hindi",Georgia,serif;font-weight:400;margin:0}
+header p{color:var(--mu);margin:.3rem 0 1rem;max-width:60ch}
+.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:end;background:var(--cd);border:1px solid var(--ln);border-radius:10px;padding:12px}
+label{display:flex;flex-direction:column;font-size:.8rem;color:var(--mu);gap:2px}
+input,select,button{font:inherit;color:var(--fg);background:var(--bg);border:1px solid var(--ln);border-radius:6px;padding:6px 8px}
+input[type=number]{width:96px}#tz{width:150px}button{cursor:pointer}button:focus-visible,input:focus-visible,select:focus-visible,.cell:focus-visible{outline:2px solid var(--ac);outline-offset:1px}
+#msg{color:#b3261e;min-height:1.2em;font-size:.9rem;margin:6px 0}
+.mn{display:flex;align-items:center;justify-content:space-between;margin:10px 0 4px}.mn h2{font-size:1.6rem;text-align:center}.mn small{display:block;color:var(--mu);font:400 .85rem Hind,sans-serif}
+.gw{overflow-x:auto}#grid{display:grid;grid-template-columns:repeat(7,minmax(86px,1fr));gap:4px;min-width:620px}
+.dh{font-size:.8rem;color:var(--mu);text-align:center}
+.cell{display:flex;flex-direction:column;gap:2px;min-height:96px;padding:5px;text-align:left;background:var(--cd);overflow:hidden;align-items:flex-start}
+.cell b{font-size:.95rem}.cell small{font-size:.68rem;color:var(--mu)}.cell i{font-style:normal;font-size:.66rem;line-height:1.15;color:var(--fg);font-weight:600}
+.cell.f{background:var(--fe)}.cell.sel{border-color:var(--ac);box-shadow:inset 0 0 0 1px var(--ac)}.cell.e{visibility:hidden}
+.top{display:flex;justify-content:space-between;width:100%}
+#det,.cm{background:var(--cd);border:1px solid var(--ln);border-radius:10px;padding:14px;margin-top:14px}
+#det dl{display:grid;grid-template-columns:auto 1fr;gap:2px 14px;margin:8px 0 0}#det dt{color:var(--mu)}#det dd{margin:0}
+.dg{display:flex;gap:14px;align-items:center}
+table{border-collapse:collapse;width:100%;margin-top:10px}td,th{padding:5px 8px;border-bottom:1px solid var(--ln);text-align:left;font-weight:400}
+.note{font-size:.85rem;color:var(--mu);max-width:75ch;margin-top:16px}
+.diff{color:#b3261e}.same{color:#1b7a46}
+[hidden]{display:none!important}
+#alert{position:fixed;top:env(safe-area-inset-top,0px);left:0;right:0;z-index:9;display:flex;gap:12px;justify-content:space-between;align-items:center;flex-wrap:wrap;padding:12px 16px;background:var(--fg);color:var(--bg)}
+#alert button{color:var(--fg);background:var(--bg)}
+.cell i.rm{color:var(--ac);font-weight:400}
+#rl{list-style:none;padding:0;margin:10px 0 0}#rl li{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:6px 0;border-bottom:1px solid var(--ln)}#rl span{color:var(--mu);font-size:.85rem;flex:1}
+#det{grid-column:1/-1;margin:4px 0}.ql{list-style:none;padding:0;margin:8px 0 0}.ql li{display:flex;gap:8px;align-items:center;justify-content:space-between;padding:3px 0}
+body.bgimg::before,body.bgimg::after{content:"";position:fixed;inset:0;z-index:-1}
+body.bgimg::before{background:var(--bgimg) center/cover no-repeat}body.bgimg::after{background:var(--bg);opacity:var(--dim,.4)}
+#st{margin:0 0 12px}#st summary{cursor:pointer}input[type=range]{padding:0;width:140px}input[type=file]{max-width:210px}output{color:var(--fg)}
+.ch{display:inline-block;border:1px solid var(--ln);border-radius:6px;padding:2px 6px;margin:2px;font-size:.78rem}.ch.g{border-color:var(--ac);color:var(--ac)}
+a.btn{color:var(--fg);background:var(--bg);border:1px solid var(--ln);border-radius:6px;padding:6px 8px;text-decoration:none;display:inline-block}
+#det details{border-top:1px solid var(--ln);padding:6px 0}#det summary{cursor:pointer}#det details p{margin:4px 0 0;color:var(--mu)}
+.rdn button{min-width:2.2rem}.rdn{display:inline-flex;gap:6px;align-items:center;flex-wrap:wrap}.stars{font-size:1.3rem;color:#d99a00;letter-spacing:2px}.sw{display:inline-block;width:14px;height:14px;border-radius:50%;border:1px solid var(--ln);vertical-align:-2px;margin-inline-end:4px}#gq{margin:8px 0 2px;font-size:1.05rem}table.t td,table.t th{padding:3px 8px;font-size:.85rem}.mood button[aria-pressed=true]{border-color:var(--ac);color:var(--ac)}
+.tcard{width:84px;height:136px;border:2px solid var(--ac);border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:var(--cd);color:var(--ac);font:400 1.7rem Georgia,serif}.tcard.rv{transform:rotate(180deg)}
+</style></head><body><main>
+<div id="alert" role="alert" hidden><b id="at"></b><span><button id="snz">Snooze 5 min</button> <button id="dsm">Dismiss</button></span></div>
+<header><h1>kalaNDR - Smart Vedic Calendar</h1><p>A Panchang engine, not a date list. Tithi, paksha, nakshatra, moon shape and festival dates are calculated from the sky above the location you pick.</p></header>
+<section class="cm" id="me"></section>
+<section class="cm" id="dc"></section>
+<details class="cm" id="st"><summary><h3 style="display:inline" data-t="Appearance & sounds">Appearance &amp; sounds</h3></summary>
+<div class="bar" style="border:0;padding:10px 0 0;background:none">
+<label>Theme<select id="sth"><option value="auto">Match my device</option><option value="light">Light</option><option value="dark">Dark</option></select></label>
+<label>Language<select id="slg"><option value="en">English</option><option value="hi">हिन्दी</option></select></label>
+<span id="xl" class="note"></span><label>Background picture<input id="bgf" type="file" accept="image/*"></label>
+<label>Picture dimming<input id="dim" type="range" min="0" max="90"></label>
+<button id="bgx">Remove picture</button></div>
+<div class="bar" style="border:0;padding:10px 0 0;background:none">
+<label>Alarm ringtone<select id="sat"></select></label><label>Upload your own<input id="saf" type="file" accept="audio/*"></label>
+<label>Volume <output id="oa"></output><input id="sav" type="range" min="0" max="100"></label><button id="sap">Play</button></div>
+<div class="bar" style="border:0;padding:10px 0 0;background:none">
+<label>Reminder sound<select id="snt"></select></label><label>Upload your own<input id="snf" type="file" accept="audio/*"></label>
+<label>Volume <output id="on"></output><input id="snv" type="range" min="0" max="100"></label><button id="snp">Play</button></div>
+<p class="note">"Match my device" follows your phone or computer's light and dark setting automatically. Pictures are shrunk and saved in this browser. Your own sounds must be under 1 MB. Alarms repeat the ringtone until you dismiss them; reminders play the reminder sound once. Your device's own notification banner keeps its system sound.</p></details>
+<section class="bar">
+<label>City<select id="city"></select></label>
+<label>Latitude<input id="lat" type="number" step="0.01"></label>
+<label>Longitude<input id="lon" type="number" step="0.01"></label>
+<label>Timezone<input id="tz" placeholder="Asia/Kolkata"></label>
+<button id="geo">Use my location</button>
+<label>Month names<select id="pm"><option value="a">Amanta</option><option value="p">Purnimanta</option></select></label>
+</section><div id="msg" role="status"></div>
+<nav class="mn"><button id="pv" aria-label="Previous month">‹</button><h2 id="mt"></h2><button id="nx" aria-label="Next month">›</button></nav>
+<div class="gw"><div id="grid"></div></div>
+<section class="cm"><h3 data-t="Vrat days this month">Vrat days this month</h3><ul id="vl" class="ql"></ul><p class="note" style="margin:4px 0 0">Ekadashi, Pradosh, Sankashti Chaturthi, Purnima and Amavasya.</p></section>
+<section class="cm"><h3 data-t="Upcoming eclipses">Upcoming eclipses</h3><div id="ecl"></div></section>
+<section class="cm" id="km"><h3 data-t="Kundli matching">Kundli matching</h3><div id="kmf"></div><button id="kmb" data-t="Match kundlis">Match kundlis</button><div id="kmo" style="margin-top:10px"></div></section>
+<section class="cm" id="mf"><h3 data-t="Muhurat finder">Muhurat finder</h3><div class="bar" style="border:0;padding:8px 0 0;background:none"><label>Occasion<select id="mfp"><option value="travel">Travel</option><option value="property">Buying property or a vehicle</option><option value="business">Starting a business</option><option value="house">Housewarming (griha pravesh)</option><option value="learn">Starting study or naming a child</option></select></label><button id="mfb" data-t="Find dates">Find dates</button></div><div id="mfo"></div><p class="note" style="margin:8px 0 0">Uses the next 45 days at the location chosen above. For weddings and major rites, ask a priest.</p></section>
+<section class="cm"><h3 data-t="Export & share">Export &amp; share</h3><p class="note" style="margin:6px 0">Festivals, vrat days and your reminders (daily alarms excluded) for the year shown above.</p>
+<div class="bar" style="border:0;padding:0;background:none"><button id="xc">Download CSV (Google Calendar, Outlook)</button><button id="xi">Copy calendar text (.ics)</button></div><span id="xm" class="note"></span></section>
+<section class="cm"><h3 data-t="Same festival, different cities">Same festival, different cities</h3>
+<div class="bar" style="border:0;padding:8px 0 0;background:none"><label>Festival<select id="fs"></select></label><label>Year<input id="yr" type="number" style="width:84px"></label><button id="go">Compare cities</button></div>
+<div id="cmp"></div></section>
+<section class="cm" id="rm"><h3 data-t="Reminders & alarms">Reminders &amp; alarms</h3>
+<div class="bar" style="border:0;padding:8px 0 0;background:none">
+<label>Type<select id="rt"><option value="bday">Birthday</option><option value="anniv">Anniversary / remembrance</option><option value="task">Task</option><option value="alarm">Alarm</option></select></label>
+<label>Title<input id="rtl" placeholder="Name or task" style="width:180px"></label>
+<label id="rdw">Date<input id="rd" type="date"></label>
+<label>Time<input id="rtm" type="time" value="09:00"></label>
+<label id="rrw">Repeat<select id="rr"><option value="once">Once</option><option value="daily">Every day</option></select></label>
+<label id="rhw" style="flex-direction:row;align-items:center;gap:6px"><input id="rh" type="checkbox"> Also on the Hindu date (same tithi each year)</label>
+<button id="ra">Add</button></div>
+<p style="margin:10px 0 0"><button id="en">Enable sound &amp; notifications</button> <span id="es" class="note">Reminders are saved in this browser only. Alarms ring only while this tab stays open.</span></p>
+<ul id="rl"></ul></section>
+<p class="note">Method: sidereal positions with Lahiri ayanamsa. A day takes the tithi running at the reference time its festival rule uses: sunrise, midday, pradosh (sunset + 40 min), midnight or moonrise. If a tithi spans two days the first day is shown; a skipped tithi (kshaya) falls on the day it is skipped. Sankranti is the day the Sun changes sign in daylight, or the following day if it changes at night. Adhika months carry no festivals. Smarta-style rules are used, so Vaishnava Ekadashi, Tamil, Bengali, Malayali and other regional calendars can differ. Check important dates against a published Panchang.</p>
+</main>
+<script>
+const $=s=>document.querySelector(s),D=864e5,nx=x=>x%30+1;
+const CITIES=[["Delhi",28.61,77.21,"Asia/Kolkata"],["Mumbai",19.08,72.88,"Asia/Kolkata"],["Chennai",13.08,80.27,"Asia/Kolkata"],["Guwahati",26.14,91.74,"Asia/Kolkata"],["Dubai",25.2,55.27,"Asia/Dubai"],["Singapore",1.35,103.82,"Asia/Singapore"],["London",51.51,-0.13,"Europe/London"],["New York",40.71,-74.01,"America/New_York"],["Los Angeles",34.05,-118.24,"America/Los_Angeles"],["Sydney",-33.87,151.21,"Australia/Sydney"]];
+const MONTHS="Chaitra Vaishakha Jyeshtha Ashadha Shravana Bhadrapada Ashwin Kartik Margashirsha Pausha Magha Phalguna".split(" ");
+const NAK="Ashwini Bharani Krittika Rohini Mrigashira Ardra Punarvasu Pushya Ashlesha Magha PurvaPhalguni UttaraPhalguni Hasta Chitra Swati Vishakha Anuradha Jyeshtha Mula PurvaAshadha UttaraAshadha Shravana Dhanishta Shatabhisha PurvaBhadrapada UttaraBhadrapada Revati".split(" ");
+const TN="Pratipada Dwitiya Tritiya Chaturthi Panchami Shashthi Saptami Ashtami Navami Dashami Ekadashi Dwadashi Trayodashi Chaturdashi".split(" ");
+// [name, amanta month 0=Chaitra (-1 any), tithi 1-30, reference time: s sunrise, m midday, p pradosh, n midnight, r moonrise]
+const R=[["Ugadi / Gudi Padwa",0,1,"s"],["Ram Navami",0,9,"m"],["Hanuman Jayanti",0,15,"s"],["Akshaya Tritiya",1,3,"m"],["Buddha Purnima",1,15,"m"],["Rath Yatra",3,2,"s"],["Guru Purnima",3,15,"s"],["Nag Panchami",4,5,"m"],["Raksha Bandhan",4,15,"m"],["Janmashtami",4,23,"n"],["Ganesh Chaturthi",5,4,"m"],["Anant Chaturdashi",5,14,"s"],["Navratri begins",6,1,"s"],["Durga Ashtami",6,8,"s"],["Dussehra",6,10,"m"],["Sharad Purnima",6,15,"p"],["Karva Chauth",6,19,"r"],["Dhanteras",6,28,"p"],["Diwali (Lakshmi Puja)",6,30,"p"],["Govardhan Puja",7,1,"s"],["Bhai Dooj",7,2,"m"],["Chhath Puja",7,6,"p"],["Dev Uthani Ekadashi",7,11,"s"],["Kartik Purnima",7,15,"s"],["Vasant Panchami",10,5,"m"],["Maha Shivaratri",10,29,"n"],["Holika Dahan",11,15,"p"],["Holi",11,16,"s"],["Ekadashi",-1,11,"s"],["Ekadashi",-1,26,"s"],["Makar Sankranti"],["Mesha Sankranti (Baisakhi / Vishu)"],["Pradosh Vrat",-1,13,"p"],["Pradosh Vrat",-1,28,"p"],["Sankashti Chaturthi",-1,19,"r"],["Purnima",-1,15,"s"],["Amavasya",-1,30,"s"]];
+// ---- astronomy ----
+const ay=t=>23.853+(t-946728000000)/(365.25*D)*0.013969,n360=x=>(x%360+360)%360;
+const sun=t=>n360(Astronomy.SunPosition(new Date(t)).elon-ay(t)),sg=t=>Math.floor(sun(t)/30);
+const moonL=t=>n360(Astronomy.EclipticGeoMoon(new Date(t)).lon-ay(t));
+const phase=t=>Astronomy.MoonPhase(new Date(t)),tithi=t=>Math.floor(phase(t)/12)+1;
+const fm={};function wall(t,tz){const f=fm[tz]||(fm[tz]=new Intl.DateTimeFormat("en-US",{timeZone:tz,hourCycle:"h23",year:"numeric",month:"numeric",day:"numeric",hour:"numeric",minute:"numeric",second:"numeric"}));const p={};f.formatToParts(new Date(t)).forEach(x=>p[x.type]=+x.value);return Date.UTC(p.year,p.month-1,p.day,p.hour,p.minute,p.second)}
+const off=(t,tz)=>wall(t,tz)-Math.floor(t/1000)*1000,mid=(c,tz)=>{const m=c-off(c,tz);return c-off(m,tz)};
+const dc=new Map(),rc=new Map();
+function day(L,c){const k=L.lat+","+L.lon+","+L.tz+","+c;if(dc.has(k))return dc.get(k);
+const o=new Astronomy.Observer(L.lat,L.lon,0),m=mid(c,L.tz),st=new Date(m);
+const f=(b,d)=>{const r=Astronomy.SearchRiseSet(b,o,d,st,1);return r?r.date.getTime():null};
+let sr=f("Sun",1),ss=f("Sun",-1);if(sr==null||ss==null){sr=m+6*36e5;ss=m+18*36e5}
+const r={m,sr,ss,mr:f("Moon",1),ms:f("Moon",-1)};dc.set(k,r);return r}
+const MI=[];function mon(t){for(const x of MI)if(t>=x.a&&t<x.b)return x;
+let a=Astronomy.SearchMoonPhase(0,new Date(t-32*D),34).date.getTime();
+for(;;){const b=Astronomy.SearchMoonPhase(0,new Date(a+20*D),20).date.getTime();
+if(b>t){const s=sg(a),x={a,b,i:(s+1)%12,adh:s==sg(b)};MI.push(x);return x}a=b}}
+function raw(L,c){const k=L.lat+","+L.lon+","+L.tz+","+c;if(rc.has(k))return rc.get(k);
+const d=day(L,c),n=day(L,c+D),p=day(L,c-D),out=[];
+const ref={s:d.sr,m:(d.sr+d.ss)/2,p:d.ss+40*6e4,n:(d.ss+n.sr)/2,r:d.mr&&d.mr<d.m+D?d.mr:d.ss},T={},M={};
+for(const w in ref){T[w]=tithi(ref[w]);M[w]=mon(ref[w])}
+const ts=T.s,ks=nx(nx(ts))===tithi(n.sr)?nx(ts):0;
+for(const [nm,mo,t,w] of R){if(!w||(mo>=0&&M[w].adh))continue;
+if((T[w]===t||(w==="s"&&ks===t))&&(mo<0||M[w].i===mo))out.push(nm)}
+const a=sg(d.sr),b=sg(d.ss),q=sg(p.ss),ns=b!==a?b:(q!==a?a:-1);
+if(ns===9)out.push(R[30][0]);if(ns===0)out.push(R[31][0]);
+const res=out.filter(x=>x!=="Ekadashi"||!out.some(y=>y!==x&&/Ekadashi/.test(y)));rc.set(k,res);return res}
+const fest=(L,c)=>{const p=raw(L,c-D);return raw(L,c).filter(x=>!p.includes(x))};
+// ---- language, guide, vrat data ----
+let TRL=null;const VN=new Set(["Pradosh Vrat","Sankashti Chaturthi","Purnima","Amavasya"]);
+const HT="प्रतिपदा द्वितीया तृतीया चतुर्थी पंचमी षष्ठी सप्तमी अष्टमी नवमी दशमी एकादशी द्वादशी त्रयोदशी चतुर्दशी".split(" "),HM="चैत्र वैशाख ज्येष्ठ आषाढ़ श्रावण भाद्रपद आश्विन कार्तिक मार्गशीर्ष पौष माघ फाल्गुन".split(" ");
+const NH="अश्विनी भरणी कृत्तिका रोहिणी मृगशिरा आर्द्रा पुनर्वसु पुष्य आश्लेषा मघा पूर्वाफाल्गुनी उत्तराफाल्गुनी हस्त चित्रा स्वाति विशाखा अनुराधा ज्येष्ठा मूल पूर्वाषाढ़ा उत्तराषाढ़ा श्रवण धनिष्ठा शतभिषा पूर्वाभाद्रपद उत्तराभाद्रपद रेवती".split(" ");
+const UI={"Tithi at sunrise":"सूर्योदय तिथि","Tithi ends":"तिथि समाप्त","Paksha":"पक्ष","Hindu month":"हिंदू मास","Nakshatra":"नक्षत्र","Sunrise / sunset":"सूर्योदय / सूर्यास्त","Moonrise / moonset":"चंद्रोदय / चंद्रास्त","Rahu Kaal":"राहु काल","Yamaganda":"यमगण्ड","Gulika":"गुलिक काल","Abhijit Muhurat":"अभिजित मुहूर्त","Close":"बंद करें","Add":"जोड़ें","Chandra Grahan (lunar)":"चंद्र ग्रहण","Surya Grahan (solar)":"सूर्य ग्रहण","peak":"अधिकतम","Visible from {c}":"{c} से दिखाई देगा","Not visible from {c} (below the horizon at peak)":"{c} से दिखाई नहीं देगा (चरम पर क्षितिज के नीचे)","Sutak begins":"सूतक आरंभ","faint penumbral shading, no sutak":"हल्की उपच्छाया, सूतक नहीं","total":"पूर्ण","partial":"आंशिक","annular":"वलयाकार","penumbral":"उपच्छाया","Vrat days this month":"इस माह के व्रत","Upcoming eclipses":"आगामी ग्रहण","Export & share":"निर्यात और साझा","Reminders & alarms":"अनुस्मारक और अलार्म","Appearance & sounds":"रूप और ध्वनि","Same festival, different cities":"वही त्योहार, अलग शहर","Choghadiya, day":"चौघड़िया, दिन","Choghadiya, night":"चौघड़िया, रात","Share on WhatsApp":"व्हाट्सऐप पर साझा करें","Copy text":"पाठ कॉपी करें"};
+const T=k=>TRL&&TRL.ui&&TRL.ui[k]||k;
+const HF={"Ugadi / Gudi Padwa":"उगादी / गुड़ी पड़वा","Ram Navami":"राम नवमी","Hanuman Jayanti":"हनुमान जयंती","Akshaya Tritiya":"अक्षय तृतीया","Buddha Purnima":"बुद्ध पूर्णिमा","Rath Yatra":"रथ यात्रा","Guru Purnima":"गुरु पूर्णिमा","Nag Panchami":"नाग पंचमी","Raksha Bandhan":"रक्षा बंधन","Janmashtami":"जन्माष्टमी","Ganesh Chaturthi":"गणेश चतुर्थी","Anant Chaturdashi":"अनंत चतुर्दशी","Navratri begins":"नवरात्रि आरंभ","Durga Ashtami":"दुर्गा अष्टमी","Dussehra":"दशहरा","Sharad Purnima":"शरद पूर्णिमा","Karva Chauth":"करवा चौथ","Dhanteras":"धनतेरस","Diwali (Lakshmi Puja)":"दीपावली (लक्ष्मी पूजा)","Govardhan Puja":"गोवर्धन पूजा","Bhai Dooj":"भाई दूज","Chhath Puja":"छठ पूजा","Dev Uthani Ekadashi":"देवउठनी एकादशी","Kartik Purnima":"कार्तिक पूर्णिमा","Vasant Panchami":"वसंत पंचमी","Maha Shivaratri":"महाशिवरात्रि","Holika Dahan":"होलिका दहन","Holi":"होली","Ekadashi":"एकादशी","Makar Sankranti":"मकर संक्रांति","Mesha Sankranti (Baisakhi / Vishu)":"मेष संक्रांति (बैसाखी / विशु)","Pradosh Vrat":"प्रदोष व्रत","Sankashti Chaturthi":"संकष्टी चतुर्थी","Purnima":"पूर्णिमा","Amavasya":"अमावस्या"};
+const fn=x=>TRL&&TRL.f&&TRL.f[x]||x;
+const INFO={"Ugadi / Gudi Padwa":"Hindu new year in the Deccan and Maharashtra. Hang a gudi or make ugadi pachadi, and begin new work.","Ram Navami":"Birth of Lord Rama. Fast or eat light, read the Ramayana and offer a midday puja.","Hanuman Jayanti":"Birth of Hanuman. Recite the Hanuman Chalisa, offer sindoor and visit a temple.","Akshaya Tritiya":"A day for lasting prosperity. Give to charity and begin new ventures.","Buddha Purnima":"Birth, enlightenment and passing of the Buddha. Meditate, donate and visit a temple.","Rath Yatra":"Lord Jagannath's chariot journey at Puri. Join or watch the procession.","Guru Purnima":"Honour your teachers and Ved Vyasa. Offer respects to a guru and study scripture.","Nag Panchami":"Worship of serpent deities. Offer milk and flowers at a nag shrine.","Raksha Bandhan":"Sisters tie a rakhi on brothers, who promise protection. Tie it in the auspicious part of the day, away from Bhadra.","Janmashtami":"Birth of Lord Krishna at midnight. Fast until midnight, sing bhajans and offer the midnight puja.","Ganesh Chaturthi":"Birth of Lord Ganesha. Install an idol at midday, offer modak and durva, and immerse it later.","Anant Chaturdashi":"Worship of Lord Vishnu as Ananta, and Ganesh visarjan day. Tie the anant sutra on the wrist.","Navratri begins":"Nine nights of Goddess Durga. Set up the kalash, sow barley, and fast or eat sattvic food.","Durga Ashtami":"Peak day of Durga worship. Perform Kanya puja and the Sandhi puja.","Dussehra":"Victory of good over evil. Worship tools and weapons, and watch the Ravana effigy burn.","Sharad Purnima":"Bright autumn full moon. Keep kheer in the moonlight, eat it later and worship Lakshmi.","Karva Chauth":"Married women fast from sunrise for their husbands. Break the fast after seeing the moon and offering arghya.","Dhanteras":"First day of Diwali. Worship Dhanvantari and Lakshmi, and light a lamp at dusk.","Diwali (Lakshmi Puja)":"Festival of lights. Light diyas, perform Lakshmi-Ganesh puja in the evening (pradosh) and share sweets.","Govardhan Puja":"Krishna lifting Govardhan hill. Make an annakut offering of many foods.","Bhai Dooj":"Sisters apply tilak on brothers and pray for their long life.","Chhath Puja":"Worship of the Sun. Fast and offer arghya to the setting and rising sun.","Dev Uthani Ekadashi":"Lord Vishnu wakes from his four-month sleep. Fast and worship Vishnu; Tulsi Vivah follows.","Kartik Purnima":"Sacred bathing and lighting of lamps. Bathe in a river and donate.","Vasant Panchami":"Welcomes spring and honours Saraswati. Wear yellow and worship books and instruments.","Maha Shivaratri":"The great night of Shiva. Fast, bathe the Shivling and keep vigil through the night.","Holika Dahan":"Bonfire marking Prahlada's rescue. Light it after sunset, outside Bhadra.","Holi":"Festival of colours. Play with colours and share sweets after the bonfire night.","Ekadashi":"Fast day for Lord Vishnu. Avoid grains and beans, and break the fast on the next morning (parana).","Makar Sankranti":"The Sun enters Capricorn. Bathe, donate sesame and jaggery, and fly kites.","Mesha Sankranti (Baisakhi / Vishu)":"Solar new year (Baisakhi, Vishu, Puthandu). Give thanks for the harvest and begin the year with prayers.","Pradosh Vrat":"Fast for Shiva on Trayodashi. Worship in the evening twilight.","Sankashti Chaturthi":"Fast for Ganesha on Krishna Chaturthi. Break it after moonrise with arghya to the moon.","Purnima":"Full moon. Good for Satyanarayan puja, charity and a holy bath.","Amavasya":"New moon. A day to remember ancestors with tarpan and charity."};
+const tmf=v=>v?new Intl.DateTimeFormat(loc(),{timeZone:L.tz,hour:"numeric",minute:"2-digit",hour12:true}).format(v):"none";
+// ---- ui ----
+let L,y,mo,sel,pm="a",RDs=null;
+const rdDate=()=>{if(!RDs)return new Date();const[a,b,c]=RDs.split("-").map(Number);return new Date(a,b-1,c,12,0)},rdStr=()=>RDs||lds(new Date());
+function rdNav(){const d=rdDate(),t0=lds(new Date()),isT=!RDs||RDs===t0,tm=new Date();tm.setDate(tm.getDate()+1);const lb=isT?"Today":RDs===lds(tm)?"Tomorrow":"";return `<span class="rdn"><button data-rd="-1" aria-label="${T("Previous day")}">‹</button> <b>${d.toLocaleDateString(loc(),{weekday:"short",day:"numeric",month:"short",year:"numeric"})}</b>${lb?" ("+T(lb)+")":""} <button data-rd="1" aria-label="${T("Next day")}">›</button> <button data-rd="0">${T("Today")}</button></span>`}
+const cur=()=>({name:$("#city").value,lat:+$("#lat").value,lon:+$("#lon").value,tz:$("#tz").value.trim()});
+function moon(ph,r,flip){const c=Math.cos(ph*Math.PI/180),rx=Math.abs(c)*r,w=ph<180,sw=w?(ph<90?0:1):(ph>270?1:0);
+return `<svg viewBox="0 0 ${2*r} ${2*r}" width="${2*r}" height="${2*r}" role="img" aria-label="Moon ${Math.round((1-c)*50)}% lit, ${w?"waxing":"waning"}"${flip?' style="transform:scaleX(-1)"':""}><circle cx="${r}" cy="${r}" r="${r}" fill="var(--dk)"/><path d="M${r} 0A${r} ${r} 0 0 ${w?1:0} ${r} ${2*r}A${rx} ${r} 0 0 ${sw} ${r} 0Z" fill="var(--lit)"/></svg>`}
+const tname=t=>{const q=TRL&&TRL.t;return q?(t===15?q[14]:t===30?q[15]:q[(t-1)%15]):(t===15?"Purnima":t===30?"Amavasya":TN[(t-1)%15])};
+const pk=t=>TRL&&TRL.p?TRL.p[t<=15?0:1]:(t<=15?"Shukla (waxing)":"Krishna (waning)");
+const ml=(x,t)=>(x.adh?(TRL&&TRL.a?TRL.a+" ":"Adhika "):"")+((TRL&&TRL.m)||MONTHS)[pm==="p"&&t>15?(x.i+1)%12:x.i];
+const dstr=(c,o)=>new Date(c).toLocaleDateString(loc(),Object.assign({timeZone:"UTC"},o));
+function render(){const msg=$("#msg");msg.textContent="";
+try{L=cur();if(isNaN(L.lat)||isNaN(L.lon))throw Error("Enter latitude and longitude.");
+const first=Date.UTC(y,mo,1),n=new Date(Date.UTC(y,mo+1,0)).getUTCDate(),wd=new Date(first).getUTCDay(),flip=L.lat<0,ms=new Set(),vr=[];
+let h=[0,1,2,3,4,5,6].map(i=>new Date(Date.UTC(2023,0,1+i)).toLocaleDateString(loc(),{weekday:"short",timeZone:"UTC"})).map(x=>`<div class="dh">${x}</div>`).join("")+'<div class="cell e"></div>'.repeat(wd);
+for(let i=0;i<n;i++){const c=first+i*D,d=day(L,c),t=tithi(d.sr),f0=fest(L,c),f=f0.filter(z=>!VN.has(z)),X=mon(d.sr),r=itemsOn(c,t,X);ms.add(ml(X,t));const vv=f0.filter(z=>VN.has(z));if(vv.length)vr.push([c,vv]);
+h+=`<button class="cell${f.length?" f":""}${c===sel?" sel":""}" data-c="${c}"><span class="top"><b>${i+1}</b>${moon(phase(d.sr),11,flip)}</span><small>${t===15||t===30?tname(t):((TRL&&TRL.s)?TRL.s[t<15?0:1]:(t<15?"Sh":"Kr"))+" "+t%15}</small>${f.map(x=>`<i>${fn(x)}</i>`).join("")}${r.map(x=>`<i class="rm">${ico(x)} ${isB(x)?"":x.time+" "}${esc(x.title)}</i>`).join("")}</button>`}
+$("#grid").innerHTML=h;$("#vl").innerHTML=vr.map(([c,ns])=>`<li><span><b>${dstr(c,{weekday:"short",day:"numeric",month:"short"})}</b> ${ns.map(fn).join(", ")}${ns.includes("Sankashti Chaturthi")?" · moonrise "+tmf(day(L,c).mr):""}</span></li>`).join("")||"<li>No vrat days found this month.</li>";renderEc();$("#mt").innerHTML=dstr(first,{month:"long",year:"numeric"})+`<small>Hindu months: ${[...ms].join(", ")}</small>`;
+if(sel&&sel>=first&&sel<first+n*D)detail(sel)}
+catch(e){msg.textContent=e.message.includes("time zone")||e.name==="RangeError"?"Unknown timezone. Use a name such as Asia/Kolkata.":e.message}}
+function deselect(){sel=null;RDs=null;try{if(!(ME&&ME.edit))renderMe();renderDC()}catch(e){}document.querySelectorAll(".cell.sel").forEach(e=>e.classList.remove("sel"));const d=$("#det");if(d)d.remove()}
+function detail(c,go){sel=c;{const q=new Date(c);RDs=q.getUTCFullYear()+"-"+pad(q.getUTCMonth()+1)+"-"+pad(q.getUTCDate());if(lds(new Date())===RDs)RDs=null;setTimeout(()=>{try{if(!(ME&&ME.edit))renderMe();renderDC()}catch(e){}},0)}const d=day(L,c),n=day(L,c+D),t=tithi(d.sr),x=mon(d.sr),f=fest(L,c),ph=phase(d.sr),nk=((TRL&&TRL.n)||NAK)[Math.floor(moonL(d.sr)/(360/27))],its=itemsOn(c,t,x),wd=new Date(c).getUTCDay(),rg=(a,b)=>tmf(a)+" – "+tmf(b);
+let te="—",pr="";try{te=new Intl.DateTimeFormat(loc(),{timeZone:L.tz,day:"numeric",month:"short",hour:"numeric",minute:"2-digit",hour12:true}).format(Astronomy.SearchMoonPhase((t*12)%360,new Date(d.sr),2).date)}catch(e){}
+if(f.some(z=>/Ekadashi/.test(z)))try{const en=Astronomy.SearchMoonPhase(((t+1)*12)%360,new Date(d.sr),3).date.getTime(),e2=Math.min(n.sr+(n.ss-n.sr)/5,en);pr=e2>n.sr?rg(n.sr,e2):"after sunrise"}catch(e){}
+const dl=d.ss-d.sr,u=dl/8,nu=(n.sr-d.ss)/8,sgm=k=>rg(d.sr+(k-1)*u,d.sr+k*u),CH=["Udveg","Chal","Labh","Amrit","Kaal","Shubh","Rog"],G={Chal:1,Labh:1,Amrit:1,Shubh:1},DS=[0,3,6,2,5,1,4][wd],NS=[5,1,4,0,3,6,2][wd];
+const chip=(m,a,b)=>`<span class="ch${G[m]?" g":""}">${m} ${rg(a,b)}</span>`,r8=[0,1,2,3,4,5,6,7];
+const st=`${dstr(c,{weekday:"long",day:"numeric",month:"long",year:"numeric"})}, ${L.name}: ${f.map(fn).join(", ")||"no festival"}. ${pk(t).split(" ")[0]} ${tname(t)}, ${ml(x,t)}. Sunrise ${tmf(d.sr)}.`;
+document.querySelectorAll(".cell.sel").forEach(e=>e.classList.remove("sel"));const b=document.querySelector(`.cell[data-c="${c}"]`);if(b)b.classList.add("sel");
+let det=$("#det");if(!det){det=document.createElement("div");det.id="det";$("#grid").append(det)}
+const cells=[...document.querySelectorAll("#grid .cell")],k=cells.indexOf(b);if(k>=0)cells[Math.min(cells.length-1,k-k%7+6)].after(det);
+det.innerHTML=`<div class="dg">${moon(ph,34,L.lat<0)}<div><h3>${dstr(c,{weekday:"long",day:"numeric",month:"long",year:"numeric"})}</h3><span style="color:var(--mu)">${L.name} · ${Math.round((1-Math.cos(ph*Math.PI/180))*50)}% lit</span></div><button data-close style="margin-left:auto" aria-label="Close day details">${T("Close")}</button></div>
+<dl><dt>${T("Tithi at sunrise")}</dt><dd>${pk(t).split(" ")[0]} ${tname(t)} · ${T("Tithi ends")} ${te}</dd><dt>${T("Paksha")}</dt><dd>${pk(t)}</dd><dt>${T("Hindu month")}</dt><dd>${ml(x,t)}</dd><dt>${T("Nakshatra")}</dt><dd>${nk}</dd>
+<dt>${T("Sunrise / sunset")}</dt><dd>${tmf(d.sr)} / ${tmf(d.ss)}</dd><dt>${T("Moonrise / moonset")}</dt><dd>${tmf(d.mr)} / ${tmf(d.ms)}</dd>
+<dt>${T("Rahu Kaal")}</dt><dd>${sgm([8,2,7,5,6,4,3][wd])}</dd><dt>${T("Yamaganda")}</dt><dd>${sgm([5,4,3,2,1,7,6][wd])}</dd><dt>${T("Gulika")}</dt><dd>${sgm([7,6,5,4,3,2,1][wd])}</dd><dt>${T("Abhijit Muhurat")}</dt><dd>${wd===3?"Not counted on Wednesday":rg(d.sr+7*dl/15,d.sr+8*dl/15)}</dd></dl>
+<p style="margin:10px 0 2px"><b>${T("Choghadiya, day")}</b></p>${r8.map(i=>chip(CH[(DS+i)%7],d.sr+i*u,d.sr+(i+1)*u)).join("")}
+<p style="margin:8px 0 2px"><b>${T("Choghadiya, night")}</b></p>${r8.map(i=>chip(CH[((NS-2*i)%7+7)%7],d.ss+i*nu,d.ss+(i+1)*nu)).join("")}
+${f.map(z=>`<details><summary>${fn(z)}</summary><p>${lt(z,INFO[z]||"")}${/Ekadashi/.test(z)&&pr?" Parana (break the fast) on "+dstr(c+D,{day:"numeric",month:"short"})+": "+pr+".":""}</p></details>`).join("")}
+<ul class="ql">${its.map(i=>`<li><span>${ico(i)} ${isB(i)?"":i.time+" "}${esc(i.title)}${i.type==="alarm"&&i.rep==="daily"?" (every day)":""}</span><button data-q="${i.id}" aria-label="Delete ${esc(i.title)}">Delete</button></li>`).join("")}</ul>
+<div class="bar" style="border:0;padding:8px 0 0;background:none"><label>Add to this day<select id="qt"><option value="task">Task</option><option value="bday">Birthday</option><option value="anniv">Anniversary / remembrance</option><option value="alarm">Alarm</option></select></label>
+<label>Title<input id="qtl" style="width:160px"></label><label>Time<input id="qtm" type="time" value="09:00"></label>
+<label id="qrw" hidden>Repeat<select id="qr"><option value="once">Once</option><option value="daily">Every day</option></select></label>
+<label id="qhw" hidden style="flex-direction:row;align-items:center;gap:6px"><input id="qh" type="checkbox"> Also on the Hindu date</label><button id="qa">${T("Add")}</button></div><span id="qmsg" class="note"></span>
+<p style="margin:10px 0 0"><a class="btn" href="https://wa.me/?text=${encodeURIComponent(st)}" target="_blank" rel="noopener">${T("Share on WhatsApp")}</a> <button data-copy="${esc(st)}">${T("Copy text")}</button></p>`;
+if(go){det.scrollIntoView({block:"nearest",behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});$("#qtl").focus({preventScroll:true})}}
+async function compare(){const nm=$("#fs").value,yr=+$("#yr").value,out=$("#cmp");out.textContent="Computing…";const rows=[];
+try{for(const ct of CITIES){const l={name:ct[0],lat:ct[1],lon:ct[2],tz:ct[3]},hit=[];
+for(let i=0;i<366;i++){const c=Date.UTC(yr,0,1)+i*D;if(new Date(c).getUTCFullYear()!==yr)break;if(fest(l,c).includes(nm))hit.push(c)}
+rows.push([ct[0],hit]);await new Promise(r=>setTimeout(r))}
+const k=new Set(rows.map(r=>r[1].join()));
+out.innerHTML=`<p class="${k.size>1?"diff":"same"}">${k.size>1?"The date differs between these cities.":"Same date in all these cities."} (${nm}, ${yr})</p><table>`+rows.map(r=>`<tr><th>${r[0]}</th><td>${r[1].map(c=>dstr(c,{weekday:"short",day:"numeric",month:"short"})).join(", ")||"not found"}</td></tr>`).join("")+"</table>"}
+catch(e){out.textContent="Could not compute: "+e.message}}
+// ---- reminders ----
+let items=[];try{items=JSON.parse(localStorage.getItem("panchang-items")||"[]")}catch(e){}
+const save=()=>{try{localStorage.setItem("panchang-items",JSON.stringify(items))}catch(e){}};
+const pad=n=>String(n).padStart(2,"0"),lds=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const isB=it=>it.type==="bday"||it.type==="anniv",ico=it=>it.type==="bday"?"🎂":it.type==="anniv"?"🪔":it.type==="task"?"☑":"⏰";
+function itemsOn(c,t,x){const ds=new Date(c).toISOString().slice(0,10);
+return items.filter(it=>!it.done&&(isB(it)?(it.date.slice(5)===ds.slice(5)||(it.hin&&!x.adh&&x.i===it.hin.m&&t===it.hin.t)):it.type==="task"?it.date===ds:it.rep==="daily"?ds>=it.date:it.date===ds))}
+function renderList(){const w=it=>isB(it)?`${it.type==="bday"?"Birthday":"Anniversary"} ${it.date.slice(5)}${it.hin?" + Hindu tithi":""} at ${it.time}`:it.type==="task"?`${it.date} ${it.time}`:`${it.rep==="daily"?"Every day":it.date} ${it.time}${it.off?" (rang)":""}`;
+$("#rl").innerHTML=items.slice().sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time)).map(it=>`<li><label style="flex-direction:row;align-items:center;gap:6px;color:var(--fg);font-size:1rem">${it.type==="task"?`<input type="checkbox" data-d="${it.id}"${it.done?" checked":""}>`:""}${ico(it)} ${esc(it.title)}</label><span>${w(it)}</span><button data-x="${it.id}" aria-label="Delete ${esc(it.title)}">Delete</button></li>`).join("")||"<li>No reminders yet.</li>"}
+function syncForm(){const t=$("#rt").value;$("#rdw").hidden=t==="alarm";$("#rrw").hidden=t!=="alarm";$("#rhw").hidden=!(t==="bday"||t==="anniv")}
+function addItem(v){const m=t=>{$("#msg").textContent=t;const q=$("#qmsg");if(q)q.textContent=t};
+if(!v.title){m("Enter a title.");return}
+const it={id:String(Date.now()),type:v.type,title:v.title,time:v.time,date:"",rep:"once",hin:null,done:false};
+if(v.type==="alarm"){it.rep=v.rep||"once";if(v.date)it.date=v.date;else{const n=new Date(),t0=new Date(n.getFullYear(),n.getMonth(),n.getDate(),+v.time.slice(0,2),+v.time.slice(3,5));if(t0<=n)t0.setDate(t0.getDate()+1);it.date=lds(t0)}}
+else{if(!v.date){m("Pick a date.");return}it.date=v.date;
+if(isB(v)&&v.hindu){try{const d=day(cur(),Date.UTC(+v.date.slice(0,4),+v.date.slice(5,7)-1,+v.date.slice(8,10))),x=mon(d.sr);it.hin={m:x.i,t:tithi(d.sr)}}catch(e){m("Could not work out the Hindu birthday. Check the timezone.");return}}}
+items.push(it);save();m("");$("#rtl").value="";renderList();render()}
+const lsGet=k=>{try{return localStorage.getItem(k)}catch(e){return null}},lsSet=(k,v)=>{try{localStorage.setItem(k,v);return true}catch(e){return false}};
+let ST=Object.assign({theme:"auto",dim:40,alarmTone:"Temple bell",alarmVol:80,notifTone:"Chime",notifVol:60},(()=>{try{return JSON.parse(lsGet("panchang-settings")||"{}")}catch(e){return{}}})()),bgData=lsGet("panchang-bg")||"";
+let ac,last=Date.now(),stopFn=()=>{};
+const ctx=()=>ac=ac||new (window.AudioContext||window.webkitAudioContext)();
+const nt=(c,m,f,t,d,ty,g)=>{const o=c.createOscillator(),e=c.createGain(),s=c.currentTime+t;o.type=ty;o.frequency.value=f;e.gain.setValueAtTime(.0001,s);e.gain.exponentialRampToValueAtTime(g,s+.01);e.gain.exponentialRampToValueAtTime(.0001,s+d);o.connect(e);e.connect(m);o.start(s);o.stop(s+d+.05)};
+const TONES={Beep:(c,m)=>{nt(c,m,880,0,.18,"square",.25);nt(c,m,880,.28,.18,"square",.25);return .5},
+Chime:(c,m)=>{nt(c,m,784,0,.9,"sine",.6);nt(c,m,1047,.25,1.2,"sine",.6);return 1.5},
+Bell:(c,m)=>{[1,2.76,5.4].forEach((k,i)=>nt(c,m,440*k,0,1.8,"sine",.6/(i+1)));return 1.8},
+"Temple bell":(c,m)=>{[1,2.4,4.1,6.2].forEach((k,i)=>nt(c,m,196*k,0,3.5,"sine",.7/(i+1)));return 3.5},
+Pulse:(c,m)=>{[0,.2,.4].forEach(t=>nt(c,m,660,t,.15,"triangle",.5));return .6},
+Melody:(c,m)=>{[523,659,784,1047].forEach((f,i)=>nt(c,m,f,i*.25,.5,"triangle",.5));return 1.2}};
+function sound(kind){const al=kind==="alarm",tone=al?ST.alarmTone:ST.notifTone,vol=(al?ST.alarmVol:ST.notifVol)/100,cu=lsGet("panchang-snd-"+kind);let stop=()=>{},dead=false;
+const synth=name=>{const c=ctx(),m=c.createGain();m.gain.value=vol;m.connect(c.destination);const f=TONES[name]||TONES.Chime,d=f(c,m),h=al?setInterval(()=>f(c,m),(d+.6)*1000):0;stop=()=>{clearInterval(h);try{m.disconnect()}catch(e){}}};
+if(tone==="Custom"&&cu){const a=new Audio(cu);a.volume=vol;a.loop=al;a.play().catch(()=>{if(!dead){$("#msg").textContent="Your custom sound could not play here, so a built-in tone is used.";try{synth("Chime")}catch(e){}}});stop=()=>a.pause()}else synth(tone);
+return()=>{dead=true;stop()}}
+function ring(it){stopFn();$("#alert").hidden=false;$("#at").textContent=(it.type==="alarm"?"Alarm: ":it.type==="task"?"Task due: ":it.type==="anniv"?"Anniversary today: ":"Birthday today: ")+it.title;
+try{stopFn=sound(it.type==="alarm"?"alarm":"notif")}catch(e){}
+try{if(window.Notification&&Notification.permission==="granted")new Notification(it.title)}catch(e){}
+$("#snz").onclick=()=>{stopFn();$("#alert").hidden=true;setTimeout(()=>ring(it),3e5)};$("#dsm").onclick=()=>{stopFn();$("#alert").hidden=true}}
+function tick(){const now=Date.now(),n=new Date(now),ds=lds(n),civ=Date.UTC(n.getFullYear(),n.getMonth(),n.getDate());
+for(const it of items){if(it.done||it.off)continue;const s=new Date(ds+"T"+(it.time||"09:00")+":00").getTime();if(!(s>last&&s<=now))continue;
+let hit=false;
+if(it.type==="alarm")hit=it.rep==="daily"?ds>=it.date:it.date===ds;else if(it.type==="task")hit=it.date===ds;
+else{try{const d=day(L,civ);hit=itemsOn(civ,tithi(d.sr),mon(d.sr)).includes(it)}catch(e){}}
+if(hit){if(it.type==="alarm"&&it.rep!=="daily"){it.off=true;save();renderList()}ring(it)}}
+last=now}
+// ---- setup ----
+const tzn=Intl.DateTimeFormat().resolvedOptions().timeZone,home=CITIES.find(c=>c[3]===tzn)||CITIES[0];
+$("#city").innerHTML=CITIES.map(c=>`<option>${c[0]}</option>`).join("")+"<option>Custom</option>";
+function setCity(c){$("#city").value=c[0];$("#lat").value=c[1];$("#lon").value=c[2];$("#tz").value=c[3]}
+setCity(home);const now=new Date();y=now.getFullYear();mo=now.getMonth();$("#yr").value=y;
+$("#fs").innerHTML=[...new Set(R.map(r=>r[0]))].map(n=>`<option>${n}</option>`).join("");
+$("#city").onchange=()=>{const c=CITIES.find(c=>c[0]===$("#city").value);if(c)setCity(c);render()};
+["lat","lon","tz"].forEach(i=>$("#"+i).onchange=()=>{$("#city").value="Custom";render()});
+$("#pm").onchange=e=>{pm=e.target.value;render()};
+document.addEventListener("click",e=>{const b=e.target.closest("[data-rd]");if(!b)return;const k=+b.dataset.rd,base=rdDate();let t;if(k===0)t=new Date();else{t=new Date(base);t.setDate(t.getDate()+k)}y=t.getFullYear();mo=t.getMonth();sel=Date.UTC(y,mo,t.getDate());const yi=$("#yr");if(yi)yi.value=y;RDs=lds(t)===lds(new Date())?null:lds(t);render()});
+$("#pv").onclick=()=>{mo--;if(mo<0){mo=11;y--}render()};$("#nx").onclick=()=>{mo++;if(mo>11){mo=0;y++}render()};
+$("#grid").onclick=e=>{const b=e.target.closest(".cell[data-c]");if(e.target.closest("[data-close]"))return deselect();
+const cp=e.target.closest("[data-copy]");if(cp){try{navigator.clipboard.writeText(cp.dataset.copy);cp.textContent="Copied"}catch(x){cp.textContent="Copy not allowed here"}return}
+if(b)return +b.dataset.c===sel?deselect():detail(+b.dataset.c,1);
+const q=e.target.closest("[data-q]");if(q){items=items.filter(i=>i.id!==q.dataset.q);save();renderList();render();return}
+if(e.target.id==="qa")addItem({type:$("#qt").value,title:$("#qtl").value.trim(),time:$("#qtm").value||"09:00",date:new Date(sel).toISOString().slice(0,10),rep:$("#qr").value,hindu:$("#qh").checked})};
+$("#grid").onchange=e=>{if(e.target.id==="qt"){const v=e.target.value;$("#qrw").hidden=v!=="alarm";$("#qhw").hidden=!(v==="bday"||v==="anniv")}};
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&sel&&$("#det")&&!e.target.closest("select"))deselect()});
+$("#grid").onkeydown=e=>{if(e.key==="Enter"&&e.target.id==="qtl")$("#qa").click()};
+$("#go").onclick=compare;
+$("#rt").onchange=syncForm;$("#ra").onclick=()=>{const t=$("#rt").value;addItem({type:t,title:$("#rtl").value.trim(),time:$("#rtm").value||"09:00",date:t==="alarm"?"":$("#rd").value,rep:$("#rr").value,hindu:$("#rh").checked})};$("#rd").value=lds(new Date());syncForm();renderList();setInterval(tick,10000);
+$("#rl").onclick=e=>{const x=e.target.closest("[data-x]"),d=e.target.closest("[data-d]");
+if(x){items=items.filter(i=>i.id!==x.dataset.x)}else if(d){const it=items.find(i=>i.id===d.dataset.d);if(it)it.done=d.checked}else return;save();renderList();render()};
+$("#en").onclick=async()=>{const m=[];try{await ctx().resume();setTimeout(sound("notif"),2500);m.push("Sound on")}catch(e){m.push("Sound unavailable")}
+try{if(window.Notification){const r=await Notification.requestPermission();m.push(r==="granted"?"notifications on":"notifications off")}}catch(e){}
+$("#es").textContent=m.join(", ")+". Alarms ring only while this tab stays open."};
+$("#geo").onclick=()=>{try{navigator.geolocation.getCurrentPosition(p=>{$("#city").value="Custom";$("#lat").value=p.coords.latitude.toFixed(2);$("#lon").value=p.coords.longitude.toFixed(2);$("#tz").value=tzn;render()},()=>{$("#msg").textContent="Location is blocked in this view. Pick a city or type coordinates."})}catch(e){$("#msg").textContent="Location is not available. Pick a city or type coordinates."}};
+// ---- eclipses & export ----
+const ecc={};
+function renderEc(){const k=L.lat+","+L.lon+","+(ST.lang||"en"),box=$("#ecl");if(ecc[k]){box.innerHTML=ecc[k];return}
+try{const o=new Astronomy.Observer(L.lat,L.lon,0),now=new Date(),list=[];let a=Astronomy.SearchLunarEclipse(now),b=Astronomy.SearchLocalSolarEclipse(now,o);
+for(let i=0;i<4;i++){const q=Astronomy.Equator("Moon",a.peak,o,true,true);list.push({t:a.peak.date.getTime(),k:a.kind,vis:Astronomy.Horizon(a.peak,o,q.ra,q.dec,"normal").altitude>0,sut:9,pen:a.kind==="penumbral"});a=Astronomy.NextLunarEclipse(a.peak);
+list.push({t:b.peak.time.date.getTime(),k:b.kind,solar:1,vis:b.peak.altitude>0,sut:12});b=Astronomy.NextLocalSolarEclipse(b.peak.time,o)}
+list.sort((p,q)=>p.t-q.t);const f=v=>new Intl.DateTimeFormat(loc(),{timeZone:L.tz,weekday:"short",day:"numeric",month:"short",year:"numeric",hour:"numeric",minute:"2-digit",hour12:true}).format(v);
+ecc[k]='<ul class="ql">'+list.slice(0,5).map(e=>`<li><span><b>${T(e.solar?"Surya Grahan (solar)":"Chandra Grahan (lunar)")}, ${T(e.k)}</b> · ${T("peak")} ${f(e.t)}<br><small>${e.vis?T("Visible from {c}").replace("{c}",L.name)+(e.pen?" ("+T("faint penumbral shading, no sutak")+")":". "+T("Sutak begins")+" "+f(e.t-e.sut*36e5)):T("Not visible from {c} (below the horizon at peak)").replace("{c}",L.name)}</small></span></li>`).join("")+"</ul>";box.innerHTML=ecc[k]}catch(e){box.textContent="Eclipse search is not available in this view."}}
+async function evs(){const out=[];for(let i=0;i<366;i++){const c=Date.UTC(y,0,1)+i*D;if(new Date(c).getUTCFullYear()!==y)break;const d=day(L,c),t=tithi(d.sr),x=mon(d.sr);
+fest(L,c).forEach(z=>out.push({c,s:z,info:INFO[z]||""}));itemsOn(c,t,x).forEach(it=>{if(!(it.type==="alarm"&&it.rep==="daily"))out.push({c,s:ico(it)+" "+it.title,tm:isB(it)?"":it.time})});if(i%30===29)await new Promise(r=>setTimeout(r))}return out}
+const h12=hm=>{const h=+hm.slice(0,2);return (h%12||12)+":"+hm.slice(3,5)+(h<12?" AM":" PM")};
+const csv=ev=>"Subject,Start Date,Start Time,End Date,End Time,All Day Event,Description\n"+ev.map(e=>{const q=v=>'"'+String(v).replace(/"/g,'""')+'"',[Y,M,Dd]=new Date(e.c).toISOString().slice(0,10).split("-"),sd=M+"/"+Dd+"/"+Y,tt=e.tm?h12(e.tm):"";return [q(e.s),sd,tt,sd,tt,e.tm?"False":"True",q(e.info||"")].join(",")}).join("\n");
+const ics=ev=>{const st=new Date().toISOString().replace(/[-:]|\.\d+/g,"");return "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Panchang//EN\r\n"+ev.map((e,i)=>{const d8=new Date(e.c).toISOString().slice(0,10).replace(/-/g,"");return "BEGIN:VEVENT\r\nUID:"+i+"-"+d8+"@panchang\r\nDTSTAMP:"+st+"\r\n"+(e.tm?`DTSTART:${d8}T${e.tm.replace(":","")}00\r\nDURATION:PT30M\r\n`:`DTSTART;VALUE=DATE:${d8}\r\n`)+"SUMMARY:"+e.s.replace(/[,;\r\n]/g," ")+"\r\nEND:VEVENT\r\n"}).join("")+"END:VCALENDAR\r\n"};
+$("#xc").onclick=async()=>{const m=$("#xm");m.textContent="Preparing…";try{const ev=await evs(),dls=window.claude&&await claude.use("downloads");if(!dls){m.textContent="File saving is not available in this view. Use Copy calendar text instead.";return}
+await dls.save({filename:`panchang-${y}-${L.name.replace(/\W+/g,"-")}.csv`,data:csv(ev)});m.textContent="Saved. Import the CSV in Google Calendar or Outlook."}catch(e){m.textContent=e&&e.code==="declined"?"Save cancelled.":"Could not save here."}};
+$("#xi").onclick=async()=>{const m=$("#xm");m.textContent="Preparing…";try{await navigator.clipboard.writeText(ics(await evs()));m.textContent="Copied. Paste into a text file, save it as panchang.ics and import it."}catch(e){m.textContent="Copying is not allowed in this view."}};
+// ---- languages, birth chart, daily thought ----
+const LANGS={en:["English","en-IN"],hi:["हिन्दी","hi-IN"],bn:["বাংলা","bn-IN"],mr:["मराठी","mr-IN"],te:["తెలుగు","te-IN"],ta:["தமிழ்","ta-IN"],gu:["ગુજરાતી","gu-IN"],kn:["ಕನ್ನಡ","kn-IN"],ml:["മലയാളം","ml-IN"],or:["ଓଡ଼ିଆ","or-IN"],pa:["ਪੰਜਾਬੀ","pa-IN"],as:["অসমীয়া","as-IN"],ur:["اردو","ur-IN"],sa:["संस्कृतम्","hi-IN"],es:["Español","es"],fr:["Français","fr"],de:["Deutsch","de"],pt:["Português","pt"],ru:["Русский","ru"],ar:["العربية","ar"],zh:["中文 (简体)","zh-CN"],ja:["日本語","ja"],id:["Bahasa Indonesia","id"],ko:["한국어","ko"]};
+const RTL=["ar","ur"],loc=()=>LANGS[ST.lang||"en"][1];
+const RASHI=["Mesha (Aries)","Vrishabha (Taurus)","Mithuna (Gemini)","Karka (Cancer)","Simha (Leo)","Kanya (Virgo)","Tula (Libra)","Vrischika (Scorpio)","Dhanu (Sagittarius)","Makara (Capricorn)","Kumbha (Aquarius)","Meena (Pisces)"],GRAHA="Sun Moon Mars Mercury Jupiter Venus Saturn Rahu Ketu".split(" ");
+const NEWK="Your birth details|Your day|Name (optional)|Date of birth|Time of birth|Place of birth|Other place|Save and show my day|Skip for now|Edit details|Clear my details|Add birth details|Lagna (ascendant)|Moon sign (Rashi)|Nakshatra and pada|Sun sign|Mulank|Bhagyank|Colour of the day|Number of the day|Best time today|Avoid today|How are you feeling today?|Birth chart|Planet|Sign|Degree|Gita thought for you|Latitude|Longitude|Timezone|Calm|Happy|Grateful|Anxious|Sad|Angry|Tired|Unmotivated|Confused|Fearful|Orange|White|Red|Green|Yellow|Pink|Blue|Excellent|Good|Mixed|Careful|Low-key|Today's cards|Tarot card of the day|Angel reading|Mantra and remedy|Mantra for your Moon sign|Reversed|Vimshottari dasha|Sade Sati|Kundli matching|Muhurat finder|Find dates|Match kundlis|Country|State or region (optional)|City or town|Find place|Quick pick (works offline)|Previous day|Next day|Tomorrow|Today".split("|");
+const UIK=[...new Set([...Object.keys(UI),...NEWK])];
+const HOUSE_T=["The Moon is on your own sign: you feel emotionally sharp and self-focused. Good for fresh starts, but watch sensitivity.","Money and speech need care today. Avoid impulsive spending and sharp words.","Courage and effort pay off. A good day for short trips, calls and getting tasks done.","A slower, home-centred mood. Rest, family and comfort matter more than ambition.","The mind is busy and moods can swing. Avoid risky bets and sleep on big decisions.","Obstacles ease and rivals lose ground. A strong day for work, health routines and pending tasks.","Relationships and partnerships go well. Good for meetings, collaboration and social plans.","Energy dips and things move slowly. Avoid big commitments and take extra care with health and travel.","Luck is mixed and plans can be delayed. Be patient and lean on guidance from elders or teachers.","Career focus is strong and effort gets noticed. A good day for important work.","Gains, support and good news are likely. A fine day to network and finish what you started.","Expenses and restlessness rise. Keep plans simple, avoid long travel and protect your sleep."],
+TARA_T=["Janma tara: personal energy is high, but be mindful of your health.","Sampat tara: supports wealth and comfort.","Vipat tara: avoid risks and expect small obstacles.","Kshema tara: safe, steady and protective.","Pratyari tara: possible friction with others, so stay calm.","Sadhaka tara: your efforts succeed.","Vadha tara: not good for new ventures, so keep it light.","Mitra tara: friends and allies help you.","Ati-mitra tara: very supportive, good for new work."],
+DISC="Astrology is traditional guidance for reflection, not a prediction of fact or advice on health, money or law. Today's indications come from the Moon's transit (Chandra gochar) and Tarabala.";
+const lt=(id,en)=>TRL&&TRL.i&&TRL.i[id]||en,rn=i=>((TRL&&TRL.r)||RASHI)[i],gn=i=>((TRL&&TRL.g)||GRAHA)[i],cap=z=>z[0].toUpperCase()+z.slice(1);
+const HIPACK={m:HM,t:[...HT,"पूर्णिमा","अमावस्या"],n:NH,p:["शुक्ल (बढ़ता)","कृष्ण (घटता)"],a:"अधिक",s:["शु","कृ"],r:"मेष वृषभ मिथुन कर्क सिंह कन्या तुला वृश्चिक धनु मकर कुंभ मीन".split(" "),g:"सूर्य चंद्र मंगल बुध गुरु शुक्र शनि राहु केतु".split(" ")};
+const EN={m:MONTHS,t:[...TN,"Purnima","Amavasya"],n:NAK,p:["Shukla (waxing)","Krishna (waning)"],a:"Adhika",s:["Shukla","Krishna"],r:RASHI,g:GRAHA},LEN={m:12,t:16,n:27,p:2,s:2,r:12,g:9};
+function getPack(c){if(c==="en")return null;let x=null;try{x=JSON.parse(lsGet("panchang-tr-"+c)||"null")}catch(e){}
+return x||Object.assign(c==="hi"?{...HIPACK}:{},{ui:c==="hi"?{...UI}:{},f:c==="hi"?{...HF}:{},i:{}})}
+const kv=a=>Object.fromEntries(a.map(k=>[k,k]));
+function jobs(p){const a={};for(const k in EN)if(!p[k])a[k]=EN[k];const u=UIK.filter(k=>!p.ui[k]),f=Object.keys(INFO).filter(k=>!p.f[k]);if(u.length)a.ui=kv(u);if(f.length)a.f=kv(f);
+const i1={},i2={};for(const k in INFO)if(!p.i[k])i1[k]=INFO[k];HOUSE_T.forEach((x,j)=>{if(!p.i["h"+(j+1)])i2["h"+(j+1)]=x});TARA_T.forEach((x,j)=>{if(!p.i["t"+(j+1)])i2["t"+(j+1)]=x});if(!p.i.disc)i2.disc=DISC;
+return [a,{i:i1},{i:i2}].filter(o=>Object.keys(o).length&&!(o.i&&!Object.keys(o.i).length))}
+function merge(p,r){for(const k in r){const v=r[k];if(LEN[k]){if(Array.isArray(v)&&v.length===LEN[k]&&v.every(x=>typeof x==="string"))p[k]=v}else if(k==="a"){if(typeof v==="string")p.a=v}else if(["ui","f","i"].includes(k)&&v&&typeof v==="object")for(const q in v)if(typeof v[q]==="string")p[k][q]=v[q]}}
+async function fill(c,p){const js=jobs(p),say=t=>{$("#xl").textContent=t};if(!js.length)return;const sm=window.claude&&await claude.use("sample");
+if(!sm){say("Auto-translation is not available in this view, so some text stays in English.");return}
+let n=0;for(const j of js){say(`Translating… ${++n}/${js.length}`);
+try{merge(p,await sm.json(`Translate the values of this JSON into ${LANGS[c][0]} (language code ${c}). Keep every key and array length exactly. Use the standard traditional Hindu calendar and astrology terms that speakers of this language use. Keep placeholders such as {c} unchanged, and keep the "s" abbreviations to 1-3 characters. Return only the JSON.\n`+JSON.stringify(j)));
+lsSet("panchang-tr-"+c,JSON.stringify(p));if(ST.lang===c){TRL=p;applyLang()}}catch(e){say("Translation stopped ("+((e&&e.code)||"error")+"). Some text stays in English.");return}}
+say("")}
+function applyLang(){const c=ST.lang||"en";document.documentElement.lang=LANGS[c][1].split("-")[0];document.documentElement.dir=RTL.includes(c)?"rtl":"ltr";
+document.querySelectorAll("[data-t]").forEach(e=>e.textContent=T(e.dataset.t));for(const k in ecc)delete ecc[k];render();renderList();renderMe();renderDC();renderKM()}
+function setLang(c,boot){ST.lang=c;saveST();TRL=getPack(c);applyLang();if(!boot&&TRL)fill(c,TRL)}
+// birth chart
+let ME=null;try{ME=JSON.parse(lsGet("panchang-me")||"null")}catch(e){}
+const saveME=()=>lsSet("panchang-me",JSON.stringify(ME)),dr=n=>n%9||9,sdg=z=>String(z).replace(/\D/g,"").split("").reduce((a,b)=>a+ +b,0);
+const BP=[["Delhi",28.61,77.21],["Mumbai",19.08,72.88],["Kolkata",22.57,88.36],["Chennai",13.08,80.27],["Bengaluru",12.97,77.59],["Hyderabad",17.39,78.49],["Pune",18.52,73.86],["Ahmedabad",23.02,72.57],["Jaipur",26.91,75.79],["Lucknow",26.85,80.95],["Patna",25.59,85.14],["Bhopal",23.26,77.41],["Chandigarh",30.73,76.78],["Varanasi",25.32,82.97],["Kochi",9.93,76.27],["Bhubaneswar",20.3,85.82],["Indore",22.72,75.86],["Nagpur",21.15,79.09],["Guwahati",26.14,91.74],["Amritsar",31.63,74.87],["Dehradun",30.32,78.03],["Ranchi",23.34,85.31]].map(b=>[...b,"Asia/Kolkata"]).concat([["London",51.51,-0.13,"Europe/London"],["New York",40.71,-74.01,"America/New_York"],["Dubai",25.2,55.27,"Asia/Dubai"]]);
+const COL=[["Orange","#e8761e"],["White","#f1f1f1"],["Red","#d62828"],["Green","#2e9e4f"],["Yellow","#f2c40f"],["Pink","#ee7fb0"],["Blue","#2f5fd0"]],MOODS="calm happy grateful anxious sad angry tired unmotivated confused fearful".split(" ");
+const NK=l=>{const w=360/27;return{i:Math.floor(l/w),p:Math.floor(l%w/(w/4))+1}},sidl=(b,dt)=>n360(Astronomy.Ecliptic(Astronomy.GeoVector(b,dt,true)).elon-23.853);
+function chart(m){const [Y,M,Dd]=m.dob.split("-").map(Number),[h,mi]=m.tob.split(":").map(Number),tz=m.place.tz,u=Date.UTC(Y,M-1,Dd,h,mi);let t=u-off(u,tz);t=u-off(t,tz);
+const dt=new Date(t),Tc=(t-946728000000)/(36525*D),ayn=ay(t),rah=n360(125.04452-1934.136261*Tc-ayn),pl=["Sun","Moon","Mars","Mercury","Jupiter","Venus","Saturn"].map(b=>sidl(b,dt)).concat([rah,n360(rah+180)]);
+const ram=n360(Astronomy.SiderealTime(dt)*15+m.place.lon)*Math.PI/180,e=23.4393*Math.PI/180,ph=m.place.lat*Math.PI/180;
+return{t,pl,asc:n360(Math.atan2(Math.cos(ram),-(Math.sin(ram)*Math.cos(e)+Math.tan(ph)*Math.sin(e)))*180/Math.PI-ayn)}}
+function reading(m){const c=chart(m),mn=c.pl[1],nm=NK(mn),tl=sidl("Moon",rdDate()),tn=NK(tl),house=((Math.floor(tl/30)-Math.floor(mn/30)+12)%12)+1,tara=((tn.i-nm.i+27)%27)%9+1;
+return{c,nm,house,tara,stars:1+([1,3,6,7,10,11].includes(house)?2:0)+([2,4,6,8,9].includes(tara)?2:tara===1?1:0)}}
+const QUOTES=[["2.47","Do your work with full effort, but loosen your grip on the results.","anxious unmotivated confused"],["2.14","Heat and cold, joy and pain come and go. Learn to bear them patiently.","sad tired anxious"],["2.20","What is truly you is never born and never dies; loss cannot wound it.","sad fearful"],["2.22","As we change worn-out clothes for new ones, life moves on to a fresh beginning.","sad fearful"],["2.38","Meet gain and loss, victory and defeat with the same even mind, and then act.","anxious fearful"],["2.48","Steady your mind, act without clinging, and stay balanced in success and failure.","anxious calm"],["2.50","Skill in action is yoga: do your work with a clear and steady mind.","unmotivated calm"],["2.3","Do not give in to weakness. Shake off this small-heartedness and rise.","unmotivated tired fearful"],["2.62-63","Dwelling on desires breeds attachment, then anger, then confusion. Notice the thought early.","angry confused"],["2.66","Without a steady mind there is no peace, and without peace, no lasting happiness.","anxious"],["2.71","One who lets go of longing and ego walks in peace.","calm confused"],["3.19","Keep doing what needs to be done without attachment, and you reach the highest.","unmotivated tired"],["3.35","Your own path, even imperfect, is better than another's path followed perfectly.","confused"],["4.38","Nothing purifies like knowledge. Seek clarity and the fog lifts in time.","confused"],["5.10","Act without attachment and the world will not stain you, as water does not cling to a lotus leaf.","anxious tired"],["6.5","Lift yourself by your own mind and do not let it pull you down; it can be your friend or your enemy.","sad unmotivated"],["6.7","One who has won over the mind rests in peace through heat and cold, joy and sorrow.","calm happy"],["6.17","Be moderate in food, rest, work and recreation; balance removes sorrow.","tired anxious"],["6.35","The mind is restless and hard to hold, yet practice and detachment can train it.","anxious confused angry"],["9.22","To those who remember me with devotion, I carry what they lack and protect what they have.","fearful anxious sad"],["9.26","A leaf, a flower, a fruit or a little water, offered with love, is accepted gladly.","grateful happy"],["9.27","Whatever you do, eat, offer or give, do it as an offering.","grateful happy"],["12.13","Hold no hatred for any being; be friendly and compassionate.","angry calm happy"],["12.19","Be content with whatever comes, steady in mind and devoted in heart.","grateful happy calm"],["16.21","Anger, greed and desire open the doors to ruin; guard them.","angry"],["17.15","Speak words that are truthful, kind and useful, without causing distress.","angry calm"],["18.58","Keep your mind on the divine and you will cross every difficulty.","fearful anxious"],["18.66","Let go of your burdens and take refuge; do not grieve.","sad fearful anxious"]];
+const hash=z=>{let h=2166136261;for(const c of z){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}return h>>>0};let GEST=false;addEventListener("pointerdown",()=>GEST=true,{once:true});
+async function qTr(q){const lg=ST.lang||"en";if(lg==="en")return;let t=lsGet("panchang-q-"+lg+"-"+q[0]);
+if(!t){if(!GEST)return;try{const sm=window.claude&&await claude.use("sample");if(!sm)return;t=(await sm(`Translate this short Bhagavad Gita teaching into ${LANGS[lg][0]} (${lg}). Return only the translation.\n`+q[1])).text.trim();lsSet("panchang-q-"+lg+"-"+q[0],t)}catch(e){return}}
+const el=$("#gq");if(el&&ST.lang===lg)el.textContent=t}
+function renderMe(){const box=$("#me");if(!box)return;
+if(!ME||ME.edit){const m=ME||{},p=m.place||{};
+box.innerHTML=`<h3>${T("Your birth details")}</h3><p class="note" style="margin:4px 0 8px">Stored only on this device. Used to work out your chart and daily reading.</p><div class="bar" style="border:0;padding:0;background:none"><label>${T("Name (optional)")}<input id="bn" value="${esc(m.name||"")}"></label><label>${T("Date of birth")}<input id="bd" type="date" value="${m.dob||""}"></label><label>${T("Time of birth")}<input id="bt" type="time" value="${m.tob||"12:00"}"></label>
+${pplace("b",p)}
+<button data-me="save">${T("Save and show my day")}</button><button data-me="skip">${T("Skip for now")}</button></div><span id="bm" class="note"></span>`;return}
+if(ME.skip){box.innerHTML=`<button data-me="edit">${T("Add birth details")}</button>`;return}
+try{const r=reading(ME),c=r.c,n=rdDate(),today=lds(n),mood=ME.mood&&ME.mood.d===today?ME.mood.v:"",wd=n.getDay(),col=COL[wd],mk=dr(+ME.dob.slice(8)),num=dr(sdg(today)+mk);
+let best="—",avoid="—";try{const d=day(L,Date.UTC(n.getFullYear(),n.getMonth(),n.getDate())),dl=d.ss-d.sr,u=dl/8,k=[8,2,7,5,6,4,3][wd],rg=(a,b)=>tmf(a)+" – "+tmf(b);avoid=rg(d.sr+(k-1)*u,d.sr+k*u);best=wd===3?rg(d.sr,d.sr+u):rg(d.sr+7*dl/15,d.sr+8*dl/15)}catch(x){}
+const pool=QUOTES.filter(q=>!mood||q[2].split(" ").includes(mood)),q=pool[hash((ME.name||"")+ME.dob+ME.tob+today+mood)%pool.length],nk=i=>((TRL&&TRL.n)||NAK)[i];
+box.innerHTML=`<h3>${T("Your day")}${ME.name?", "+esc(ME.name):""}</h3><p style="margin:2px 0 6px">${rdNav()}</p> <button data-me="edit">${T("Edit details")}</button> <button data-me="clear">${T("Clear my details")}</button>
+<p class="stars" style="margin:8px 0 0" aria-label="${r.stars}/5">${"★".repeat(r.stars)}${"☆".repeat(5-r.stars)} <b style="font-size:1rem;color:var(--fg)">${T(["Low-key","Careful","Mixed","Good","Excellent"][r.stars-1])}</b></p>
+<p style="margin:4px 0">${lt("h"+r.house,HOUSE_T[r.house-1])} ${lt("t"+r.tara,TARA_T[r.tara-1])}</p>
+<p style="margin:6px 0"><span class="ch"><span class="sw" style="background:${col[1]}"></span>${T("Colour of the day")}: <b>${T(col[0])}</b></span><span class="ch">${T("Number of the day")}: <b>${num}</b></span><span class="ch">${T("Best time today")}: <b>${best}</b></span><span class="ch">${T("Avoid today")}: <b>${avoid}</b></span></p>
+<dl style="display:grid;grid-template-columns:auto 1fr;gap:2px 14px;margin:6px 0"><dt style="color:var(--mu)">${T("Lagna (ascendant)")}</dt><dd style="margin:0">${rn(Math.floor(c.asc/30))}</dd><dt style="color:var(--mu)">${T("Moon sign (Rashi)")}</dt><dd style="margin:0">${rn(Math.floor(c.pl[1]/30))}</dd><dt style="color:var(--mu)">${T("Nakshatra and pada")}</dt><dd style="margin:0">${nk(r.nm.i)} · ${r.nm.p}</dd><dt style="color:var(--mu)">${T("Sun sign")}</dt><dd style="margin:0">${rn(Math.floor(c.pl[0]/30))}</dd><dt style="color:var(--mu)">${T("Mulank")} / ${T("Bhagyank")}</dt><dd style="margin:0">${mk} / ${dr(sdg(ME.dob))}</dd></dl>
+<details><summary>${T("Birth chart")}</summary><table class="t"><tr><th>${T("Planet")}</th><th>${T("Sign")}</th><th>${T("Degree")}</th><th>${T("Nakshatra and pada")}</th></tr><tr><td>${T("Lagna (ascendant)")}</td><td>${rn(Math.floor(c.asc/30))}</td><td>${(c.asc%30).toFixed(1)}°</td><td>${nk(NK(c.asc).i)}</td></tr>${c.pl.map((l,i)=>`<tr><td>${gn(i)}</td><td>${rn(Math.floor(l/30))}</td><td>${(l%30).toFixed(1)}°</td><td>${nk(NK(l).i)}</td></tr>`).join("")}</table></details>
+${extra(c)}<div class="mood" style="margin-top:10px"><b>${T("How are you feeling today?")}</b><br>${MOODS.map(z=>`<button data-mood="${z}" aria-pressed="${z===mood}">${T(cap(z))}</button>`).join(" ")}</div>
+<p id="gq" style="margin:10px 0 2px">${esc(q[1])}</p><p style="margin:0"><span class="ch">${T("Gita thought for you")}</span><span class="ch">Bhagavad Gita ${q[0]}</span>${q[2].split(" ").map(z=>`<span class="ch">${T(cap(z))}</span>`).join("")}</p>
+<p class="note">${lt("disc",DISC)}</p>`;qTr(q)}catch(x){box.innerHTML=`<button data-me="edit">${T("Edit details")}</button> <span class="note">Could not calculate the chart. Check the timezone.</span>`}}
+
+$("#me").onclick=e=>{const mb=e.target.closest("[data-mood]");if(mb){ME.mood={d:rdStr(),v:mb.dataset.mood};saveME();renderMe();return}
+const b=e.target.closest("[data-me]"),a=b&&b.dataset.me;if(a==="skip"){ME={skip:true};saveME();renderMe()}else if(a==="edit"){ME=Object.assign(ME||{},{edit:true,skip:false});renderMe()}else if(a==="clear"){ME=null;try{localStorage.removeItem("panchang-me")}catch(x){}renderMe()}
+else if(a==="save"){const m={name:$("#bn").value.trim(),dob:$("#bd").value,tob:$("#bt").value||"12:00",place:{name:$("#bpi").value.trim()||"custom",cc:$("#bpc").value,st:$("#bps").value.trim(),lat:+$("#bla").value,lon:+$("#blo").value,tz:$("#btz").value.trim()}},say=t=>$("#bm").textContent=t;
+if(!m.dob){say("Enter your date of birth.");return}if(!$("#bla").value||!$("#blo").value||!m.place.tz){say("Search and pick your place of birth, or enter latitude, longitude and timezone.");return}
+try{reading(m)}catch(x){say("Could not calculate. Check the timezone, for example Asia/Kolkata.");return}m.mood=ME&&ME.mood;ME=m;saveME();renderMe()}};
+// ---- place picker: country, state, city ----
+const COUNTRIES="IN:India|AF:Afghanistan|AL:Albania|DZ:Algeria|AD:Andorra|AO:Angola|AI:Anguilla|AQ:Antarctica|AG:Antigua & Barbuda|AR:Argentina|AM:Armenia|AW:Aruba|AU:Australia|AT:Austria|AZ:Azerbaijan|BS:Bahamas|BH:Bahrain|BD:Bangladesh|BB:Barbados|BY:Belarus|BE:Belgium|BZ:Belize|BJ:Benin|BM:Bermuda|BT:Bhutan|BO:Bolivia|BA:Bosnia & Herzegovina|BW:Botswana|BV:Bouvet Island|BR:Brazil|GB:Britain (UK)|IO:British Indian Ocean Territory|BN:Brunei|BG:Bulgaria|BF:Burkina Faso|BI:Burundi|KH:Cambodia|CM:Cameroon|CA:Canada|CV:Cape Verde|BQ:Caribbean NL|KY:Cayman Islands|CF:Central African Rep.|TD:Chad|CL:Chile|CN:China|CX:Christmas Island|CC:Cocos (Keeling) Islands|CO:Colombia|KM:Comoros|CD:Congo (Dem. Rep.)|CG:Congo (Rep.)|CK:Cook Islands|CR:Costa Rica|HR:Croatia|CU:Cuba|CW:Curaçao|CY:Cyprus|CZ:Czech Republic|CI:Côte d’Ivoire|DK:Denmark|DJ:Djibouti|DM:Dominica|DO:Dominican Republic|TL:East Timor|EC:Ecuador|EG:Egypt|SV:El Salvador|GQ:Equatorial Guinea|ER:Eritrea|EE:Estonia|SZ:Eswatini (Swaziland)|ET:Ethiopia|FK:Falkland Islands|FO:Faroe Islands|FJ:Fiji|FI:Finland|FR:France|GF:French Guiana|PF:French Polynesia|TF:French S. Terr.|GA:Gabon|GM:Gambia|GE:Georgia|DE:Germany|GH:Ghana|GI:Gibraltar|GR:Greece|GL:Greenland|GD:Grenada|GP:Guadeloupe|GU:Guam|GT:Guatemala|GG:Guernsey|GN:Guinea|GW:Guinea-Bissau|GY:Guyana|HT:Haiti|HM:Heard Island & McDonald Islands|HN:Honduras|HK:Hong Kong|HU:Hungary|IS:Iceland|ID:Indonesia|IR:Iran|IQ:Iraq|IE:Ireland|IM:Isle of Man|IL:Israel|IT:Italy|JM:Jamaica|JP:Japan|JE:Jersey|JO:Jordan|KZ:Kazakhstan|KE:Kenya|KI:Kiribati|KP:Korea (North)|KR:Korea (South)|KW:Kuwait|KG:Kyrgyzstan|LA:Laos|LV:Latvia|LB:Lebanon|LS:Lesotho|LR:Liberia|LY:Libya|LI:Liechtenstein|LT:Lithuania|LU:Luxembourg|MO:Macau|MG:Madagascar|MW:Malawi|MY:Malaysia|MV:Maldives|ML:Mali|MT:Malta|MH:Marshall Islands|MQ:Martinique|MR:Mauritania|MU:Mauritius|YT:Mayotte|MX:Mexico|FM:Micronesia|MD:Moldova|MC:Monaco|MN:Mongolia|ME:Montenegro|MS:Montserrat|MA:Morocco|MZ:Mozambique|MM:Myanmar (Burma)|NA:Namibia|NR:Nauru|NP:Nepal|NL:Netherlands|NC:New Caledonia|NZ:New Zealand|NI:Nicaragua|NE:Niger|NG:Nigeria|NU:Niue|NF:Norfolk Island|MK:North Macedonia|MP:Northern Mariana Islands|NO:Norway|OM:Oman|PK:Pakistan|PW:Palau|PS:Palestine|PA:Panama|PG:Papua New Guinea|PY:Paraguay|PE:Peru|PH:Philippines|PN:Pitcairn|PL:Poland|PT:Portugal|PR:Puerto Rico|QA:Qatar|RO:Romania|RU:Russia|RW:Rwanda|RE:Réunion|AS:Samoa (American)|WS:Samoa (western)|SM:San Marino|ST:Sao Tome & Principe|SA:Saudi Arabia|SN:Senegal|RS:Serbia|SC:Seychelles|SL:Sierra Leone|SG:Singapore|SK:Slovakia|SI:Slovenia|SB:Solomon Islands|SO:Somalia|ZA:South Africa|GS:South Georgia & the South Sandwich Islands|SS:South Sudan|ES:Spain|LK:Sri Lanka|BL:St Barthelemy|SH:St Helena|KN:St Kitts & Nevis|LC:St Lucia|SX:St Maarten (Dutch)|MF:St Martin (French)|PM:St Pierre & Miquelon|VC:St Vincent|SD:Sudan|SR:Suriname|SJ:Svalbard & Jan Mayen|SE:Sweden|CH:Switzerland|SY:Syria|TW:Taiwan|TJ:Tajikistan|TZ:Tanzania|TH:Thailand|TG:Togo|TK:Tokelau|TO:Tonga|TT:Trinidad & Tobago|TN:Tunisia|TR:Turkey|TM:Turkmenistan|TC:Turks & Caicos Is|TV:Tuvalu|UM:US minor outlying islands|UG:Uganda|UA:Ukraine|AE:United Arab Emirates|US:United States|UY:Uruguay|UZ:Uzbekistan|VU:Vanuatu|VA:Vatican City|VE:Venezuela|VN:Vietnam|VG:Virgin Islands (UK)|VI:Virgin Islands (US)|WF:Wallis & Futuna|EH:Western Sahara|YE:Yemen|ZM:Zambia|ZW:Zimbabwe|AX:Åland Islands".split("|").map(z=>z.split(":")),PR={};
+function pplace(id,p){p=p||{};const cc=p.cc||"IN",v=x=>x===undefined||x===null?"":x;
+return `<label>${T("Country")}<select id="${id}pc">${COUNTRIES.map(c=>`<option value="${c[0]}"${c[0]===cc?" selected":""}>${esc(c[1])}</option>`).join("")}</select></label>
+<label>${T("State or region (optional)")}<input id="${id}ps" value="${esc(v(p.st))}" style="width:150px" autocomplete="off"></label>
+<label>${T("City or town")}<input id="${id}pi" value="${esc(p.name&&p.name!=="custom"?p.name:"")}" style="width:170px" autocomplete="off" data-find="${id}"></label><button type="button" data-ps="${id}">${T("Find place")}</button>
+<label>${T("Quick pick (works offline)")}<select id="${id}pq" data-q="${id}"><option value="">—</option>${BP.map((b,i)=>`<option value="${i}">${b[0]}</option>`).join("")}</select></label>
+<label>${T("Latitude")}<input id="${id}la" type="number" step="0.0001" value="${v(p.lat)}" style="width:104px"></label><label>${T("Longitude")}<input id="${id}lo" type="number" step="0.0001" value="${v(p.lon)}" style="width:104px"></label><label>${T("Timezone")}<input id="${id}tz" value="${esc(v(p.tz))}" style="width:140px"></label>
+<div id="${id}pr" style="flex-basis:100%;font-size:.88rem"></div>`}
+async function placeSearch(id){const q=$("#"+id+"pi").value.trim(),cc=$("#"+id+"pc").value,st=$("#"+id+"ps").value.trim().toLowerCase(),out=$("#"+id+"pr");
+if(q.length<2){out.textContent="Type at least 2 letters of the city or town.";return}out.textContent="Searching…";
+try{const r=await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(q)}&count=100&language=en&format=json&countryCode=${cc}`);if(!r.ok)throw 0;let a=(await r.json()).results||[];
+if(st)a=a.filter(x=>[x.admin1,x.admin2,x.admin3].some(y=>y&&y.toLowerCase().includes(st)));a=a.filter(x=>x.timezone).slice(0,25);PR[id]=a;
+out.innerHTML=a.length?a.map((x,i)=>`<button type="button" data-pick="${id}" data-i="${i}" style="display:block;width:100%;text-align:left;margin:2px 0">${esc(x.name)}${x.admin2&&x.admin2!==x.name?", "+esc(x.admin2):""}${x.admin1?", "+esc(x.admin1):""} · ${x.latitude.toFixed(2)}, ${x.longitude.toFixed(2)}</button>`).join(""):"No match. Check the spelling, clear the state box, or enter the coordinates yourself."}
+catch(e){out.textContent="Place search needs an internet connection. Use Quick pick or type latitude, longitude and timezone."}}
+function pickPlace(id,i){const x=(PR[id]||[])[i];if(!x)return;$("#"+id+"pi").value=x.name;$("#"+id+"ps").value=x.admin1||"";$("#"+id+"la").value=x.latitude;$("#"+id+"lo").value=x.longitude;$("#"+id+"tz").value=x.timezone;
+$("#"+id+"pr").textContent="Selected: "+x.name+(x.admin1?", "+x.admin1:"")+" ("+x.latitude.toFixed(4)+", "+x.longitude.toFixed(4)+", "+x.timezone+")"}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-ps]");if(b)return placeSearch(b.dataset.ps);const k=e.target.closest("[data-pick]");if(k)pickPlace(k.dataset.pick,+k.dataset.i)});
+document.addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.dataset&&e.target.dataset.find){e.preventDefault();placeSearch(e.target.dataset.find)}});
+document.addEventListener("change",e=>{const q=e.target.dataset&&e.target.dataset.q;if(q===undefined||e.target.value==="")return;const b=BP[+e.target.value],id=q;$("#"+id+"pi").value=b[0];$("#"+id+"pc").value=b[3]==="Asia/Kolkata"?"IN":$("#"+id+"pc").value;$("#"+id+"la").value=b[1];$("#"+id+"lo").value=b[2];$("#"+id+"tz").value=b[3];$("#"+id+"pr").textContent="Selected: "+b[0]})
+// ---- dasha, sade sati, matching, muhurat, cards ----
+const DL=[8,5,0,1,2,7,4,6,3],DY=[7,20,6,10,7,18,16,19,17],YR=365.25*D,RL=[2,5,3,1,0,3,5,2,4,6,6,4];
+const fmM=t=>new Date(t).toLocaleDateString(loc(),{month:"short",year:"numeric"});
+function dasha(c){const w=360/27,mn=c.pl[1],k0=Math.floor(mn/w)%9,f=(mn%w)/w;let a=c.t-f*DY[k0]*YR;const o=[];for(let j=0;j<9;j++){const k=(k0+j)%9,e=a+DY[k]*YR;o.push({k,l:DL[k],s:a,e});a=e}return o}
+const sdc={};
+function sade(c){const m=Math.floor(c.pl[1]/30),now=Date.now(),sat=()=>(Math.floor(sidl("Saturn",new Date())/30)-m+12)%12;
+if(!sdc[m]){const per=[];let cs=null,le=null;for(let t=now-8*YR;t<=now+30*YR;t+=10*D){const p=(Math.floor(sidl("Saturn",new Date(t))/30)-m+12)%12,on=p===11||p===0||p===1;
+if(on){if(cs===null)cs=t;le=t}else if(cs!==null&&t-le>YR){per.push([cs,le]);cs=null}}if(cs!==null)per.push([cs,le]);sdc[m]=per}
+return{ph:sat(),per:sdc[m]}}
+const MANTRA=["Om Suryaya Namah","Om Chandraya Namah","Om Angarakaya Namah","Om Budhaya Namah","Om Gurave Namah","Om Shukraya Namah","Om Shanaishcharaya Namah","Om Rahave Namah","Om Ketave Namah"],
+DEITY=["Surya","Shiva","Hanuman","Ganesha","Vishnu","Lakshmi","Shani Dev"],
+REM=["Offer water to the Sun at sunrise and begin the day with 12 slow breaths.","Offer water or milk to Shiva, or sit quietly for a few minutes in the evening light.","Recite the Hanuman Chalisa and do something physical to release tension.","Worship Ganesha, finish one pending task and share some fruit or green moong.","Visit a temple or a teacher, and share yellow items such as chana dal or bananas.","Light a ghee lamp for Lakshmi, tidy the home and offer something white.","Light a sesame oil lamp, help someone in need and keep your word on small things."];
+function extra(c){try{const now=Date.now(),ds=dasha(c),cu=ds.find(x=>now>=x.s&&now<x.e)||ds[8];let su=null,a=cu.s;for(let j=0;j<9;j++){const kk=(cu.k+j)%9,e=a+DY[cu.k]*DY[kk]/120*YR;if(now<e){su={l:DL[kk],e};break}a=e}
+const sd=sade(c),PH={11:"Rising phase of Sade Sati (Saturn in the 12th from your Moon sign).",0:"Peak phase of Sade Sati (Saturn over your Moon sign).",1:"Setting phase of Sade Sati (Saturn in the 2nd from your Moon sign).",3:"Not in Sade Sati, but in Dhaiya (Saturn in the 4th from your Moon sign).",7:"Not in Sade Sati, but in Dhaiya (Saturn in the 8th from your Moon sign)."};
+return `<details><summary>${T("Vimshottari dasha")}</summary><p style="margin:6px 0">Now: <b>${gn(cu.l)}</b> mahadasha${su?`, <b>${gn(su.l)}</b> antardasha until ${fmM(su.e)}`:""}.</p><table class="t">${ds.map(x=>`<tr><td>${x===cu?"<b>"+gn(x.l)+"</b>":gn(x.l)}</td><td>${fmM(x.s)} – ${fmM(x.e)}</td></tr>`).join("")}</table></details>
+<details><summary>${T("Sade Sati")}</summary><p style="margin:6px 0">${PH[sd.ph]||"Not in Sade Sati or Dhaiya right now."}</p><p style="margin:0;color:var(--mu)">${sd.per.length?"Sade Sati periods (approximate): "+sd.per.map(q=>fmM(q[0])+" – "+fmM(q[1])).join("; "):"No Sade Sati from 8 years ago to 30 years ahead."}</p></details>
+<p style="margin:6px 0">${T("Mantra for your Moon sign")}: <b>${MANTRA[RL[Math.floor(c.pl[1]/30)]]}</b></p>`}catch(e){return ""}}
+// tarot and angel
+const ROM="0 I II III IV V VI VII VIII IX X XI XII XIII XIV XV XVI XVII XVIII XIX XX XXI".split(" ");
+const TAROT=[["The Fool","A fresh start asks for trust. Take the first step with an open mind.","Haste or hesitation. Look before you leap, then go."],["The Magician","You have the tools you need. Focus your will and act.","Scattered energy or doubt. Clarify one goal first."],["The High Priestess","Listen inward. Quiet intuition knows more than noise.","Ignored instincts. Make time for stillness."],["The Empress","Nurture and create. Comfort, care and growth are favoured.","Overgiving or neglecting yourself. Restore your own supply."],["The Emperor","Structure and steady leadership bring order.","Rigidity or control. Loosen your grip a little."],["The Hierophant","Learn from tradition, teachers and shared values.","Rules feel stale. Question what no longer fits."],["The Lovers","A heartfelt choice or honest connection stands out.","Mixed signals or divided loyalties. Align actions with values."],["The Chariot","Determination wins when you steer your drive in one direction.","Pulled two ways. Regain control before pushing on."],["Strength","Gentle courage and patience beat force.","Self-doubt drains you. Be kind to yourself and try again."],["The Hermit","Step back and reflect. Answers come in solitude.","Isolation or avoidance. Reach out, or return to the world."],["Wheel of Fortune","Cycles turn. Accept change and ride the momentum.","A delay is temporary. Adapt rather than resist."],["Justice","Be fair and honest. Clear decisions bring balance.","Avoiding responsibility. Face the facts."],["The Hanged Man","Pause and see it from another angle. Surrender brings insight.","Stalling too long. Decide to move or let go."],["Death","An ending clears space for renewal. Let go gracefully.","Clinging to what is over. Allow the change."],["Temperance","Moderation and blending. Patience brings harmony.","Excess or imbalance. Slow down and recalibrate."],["The Devil","Notice what binds you, such as habits, desires or fears, and your power to loosen them.","A chain is loosening. Keep going."],["The Tower","A sudden shake-up reveals what was unstable. Rebuild stronger.","Resisting needed change. Better to release it now."],["The Star","Hope and healing. Quiet faith lights the way.","Low hope. Small acts of self-care restore trust."],["The Moon","Not everything is clear yet. Trust feelings, but verify facts.","Confusion lifts as the truth emerges."],["The Sun","Joy, clarity and success shine on you.","Dimmed optimism. Look for the small warm spots."],["Judgement","A call to reflect, forgive and rise to a new stage.","Harsh self-criticism. Accept your past and move forward."],["The World","Completion and wholeness. Celebrate how far you have come.","Nearly there. Finish the last step."]];
+const ANGEL=[["111","New beginnings. Your thoughts are shaping what comes next, so keep them clear and hopeful."],["222","Trust the process. Balance and patience: things are quietly falling into place."],["333","Creativity and support. Speak up and express yourself; you are encouraged."],["444","Steady foundations. You are protected; keep building step by step."],["555","Change is coming. Loosen your grip and welcome a shift."],["666","Rebalance. Step back from worry or pressure and return to what matters."],["777","Insight and alignment. Your effort is paying off; rest and reflect."],["888","Flow and abundance. Effort and reward are coming into balance."],["999","Completion. One chapter is closing; let it end gracefully."],["1111","Awareness. A good moment to set a clear intention."],["1212","Stay positive and take one practical step toward your goal."],["1234","Take the next step in order. Simple progress counts."]],
+ARCH=[["Michael","protection and courage. Act with confidence."],["Gabriel","clear communication. Share what you have been holding back."],["Camael","strength and drive. Channel your energy into one task."],["Raphael","healing and rest. Care for your body and mind."],["Sachiel","abundance and generosity. Share and receive."],["Anael","love and harmony. Soften your words and connect."],["Cassiel","patience and release. Let go of what you cannot control."]];
+function renderDC(){const box=$("#dc");if(!box)return;const n=rdDate(),today=lds(n),wd=n.getDay(),per=ME&&ME.dob,key=per?(ME.name||"")+ME.dob+ME.tob:"guest",ti=hash(key+today+"tarot")%22,rv=hash(key+today+"rev")%3===0,cd=TAROT[ti],an=ANGEL[hash(key+today+"angel")%ANGEL.length],ar=ARCH[wd];
+box.innerHTML=`<h3>${T("Today's cards")}</h3><p style="margin:2px 0 6px">${rdNav()}</p><div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:10px"><div class="tcard${rv?" rv":""}" role="img" aria-label="${cd[0]}${rv?", reversed":""}"><span>${ROM[ti]}</span></div>
+<div style="flex:1;min-width:220px"><b>${T("Tarot card of the day")}: ${cd[0]}${rv?" ("+T("Reversed")+")":""}</b><p style="margin:2px 0 8px">${rv?cd[2]:cd[1]}</p>
+<b>${T("Angel reading")}: ${an[0]}</b><p style="margin:2px 0">${an[1]}</p><p style="margin:2px 0 8px">Archangel ${ar[0]} (${n.toLocaleDateString(loc(),{weekday:"long"})}): ${ar[1]}</p>
+<b>${T("Mantra and remedy")}</b><p style="margin:2px 0">${MANTRA[wd]} (${DEITY[wd]}), 11 or 108 times. ${REM[wd]}</p></div></div>
+<p class="note" style="margin-top:8px">${per?"":"Add your birth details above for a draw that is personal to you. "}Cards, angel numbers and remedies are traditional reflection tools, not predictions. Card text is in English.</p>`}
+// kundli matching (simplified Ashtakoota)
+const VN4=[3,2,1,4,3,2,1,4,3,2,1,4],VM=[[2,1,1,0,1],[1,2,.5,0,1],[1,.5,2,1,1],[0,0,1,2,0],[1,1,1,0,2]],vg=l=>{const r=Math.floor(l/30),g=l%30;return [0,0,1,2,3,1,1,4,g<15?1:0,g<15?0:2,1,2][r]};
+const YA=[0,1,2,3,3,4,5,2,5,6,6,7,8,9,8,9,10,10,4,11,12,11,13,0,13,7,1],YE=[[7,9],[1,13],[0,8],[4,10],[3,12],[11,2],[5,6]],DEV=[0,4,6,7,12,14,16,21,26],RAK=[2,8,9,13,15,17,18,22,23];
+const FRN=[[1,2,4],[0,3],[0,1,4],[0,5],[0,1,2],[3,6],[3,5]],ENM=[[5,6],[],[3],[1],[3,5],[0,1],[0,1,2]],rel=(a,b)=>FRN[a].includes(b)?1:ENM[a].includes(b)?-1:0;
+function gm(a,b){if(a===b)return 5;const x=rel(a,b),y=rel(b,a),t=x+y;return t===2?5:t===1?4:t===0?(x===0?3:1):t===-1?.5:0}
+function ashta(a,b){const ra=Math.floor(a/30),rb=Math.floor(b/30),na=NK(a).i,nb=NK(b).i,tb=(x,y)=>[3,5,7].includes(((y-x+27)%27+1)%9)?0:1.5,ya=YA[na],yb=YA[nb],ga=x=>DEV.includes(x)?0:RAK.includes(x)?2:1,g1=ga(na),g2=ga(nb),bd=(rb-ra+12)%12+1,ND=x=>[0,1,2,2,1,0][x%6];
+return [["Varna",1,VN4[ra]>=VN4[rb]?1:0],["Vashya",2,VM[vg(a)][vg(b)]],["Tara",3,tb(na,nb)+tb(nb,na)],["Yoni",4,ya===yb?4:YE.some(([p,q])=>(p===ya&&q===yb)||(p===yb&&q===ya))?0:2],["Graha Maitri",5,gm(RL[ra],RL[rb])],["Gana",6,g1===g2?6:g1+g2===1?5:g1+g2===2?1:0],["Bhakoot",7,[2,12,5,9,6,8].includes(bd)?0:7],["Nadi",8,ND(na)!==ND(nb)?8:0]]}
+function pform(id,p,lab){return `<div class="bar" style="border:0;padding:6px 0;background:none"><b style="align-self:center;min-width:70px">${lab}</b><label>${T("Name (optional)")}<input id="${id}n" value="${esc(p.name||"")}"></label><label>${T("Date of birth")}<input id="${id}d" type="date" value="${p.dob||""}"></label><label>${T("Time of birth")}<input id="${id}t" type="time" value="${p.tob||"12:00"}"></label>${pplace(id,p.place)}</div>`}
+function renderKM(){const f=$("#kmf");if(!f)return;const rd=id=>$("#"+id+"d")?{name:$("#"+id+"n").value,dob:$("#"+id+"d").value,tob:$("#"+id+"t").value,place:{name:$("#"+id+"pi").value,cc:$("#"+id+"pc").value,st:$("#"+id+"ps").value,lat:$("#"+id+"la").value,lon:$("#"+id+"lo").value,tz:$("#"+id+"tz").value}}:null,a=rd("k1"),b=rd("k2");
+f.innerHTML=pform("k1",a&&a.dob?a:(ME&&ME.dob?ME:a||{}),"Person 1")+pform("k2",b||{},"Person 2")}
+$("#kmb").onclick=()=>{const g=id=>({name:$("#"+id+"n").value.trim(),dob:$("#"+id+"d").value,tob:$("#"+id+"t").value||"12:00",place:{name:$("#"+id+"pi").value.trim()||"custom",lat:+$("#"+id+"la").value,lon:+$("#"+id+"lo").value,tz:$("#"+id+"tz").value.trim(),ok:!!($("#"+id+"la").value&&$("#"+id+"lo").value&&$("#"+id+"tz").value.trim())}}),o=$("#kmo"),a=g("k1"),b=g("k2");
+if(!a.dob||!b.dob){o.textContent="Enter both dates of birth.";return}if(!a.place.ok||!b.place.ok){o.textContent="Search and pick a place of birth for both people.";return}
+try{const ca=chart(a),cb=chart(b),r=ashta(ca.pl[1],cb.pl[1]),tot=r.reduce((x,y)=>x+y[2],0),nk=l=>((TRL&&TRL.n)||NAK)[NK(l).i]+" · "+rn(Math.floor(l/30)),fl=r.filter(x=>x[2]===0&&["Gana","Bhakoot","Nadi"].includes(x[0])).map(x=>x[0]);
+o.innerHTML=`<p><b style="font-size:1.2rem">${tot} / 36</b> · ${tot>=28?"Excellent match":tot>=21?"Good match":tot>=18?"Acceptable (at the traditional minimum)":"Below the traditional minimum of 18"}</p><p style="margin:0;color:var(--mu)">${esc(a.name||"Person 1")}: ${nk(ca.pl[1])}<br>${esc(b.name||"Person 2")}: ${nk(cb.pl[1])}</p>
+<table class="t"><tr><th>Koota</th><th>Score</th><th>Out of</th></tr>${r.map(x=>`<tr><td>${x[0]}</td><td>${x[2]}</td><td>${x[1]}</td></tr>`).join("")}</table>${fl.length?`<p style="margin:6px 0">Scored zero: ${fl.join(", ")}. Traditions treat these as doshas that may have remedies or cancellations.</p>`:""}
+<p class="note" style="margin:6px 0 0">Simplified Ashtakoota from Moon sign and nakshatra; Person 1 is compared to Person 2 in the traditional groom-to-bride direction. Full matching also checks Mangal dosha and planetary strengths, so consult an astrologer for marriage decisions.</p>`}catch(e){o.textContent="Could not calculate. Check the details."}};
+// muhurat finder
+const MU={travel:[[0,4,6,7,12,16,21,22,26],[1,3,4,5]],property:[[3,4,7,11,12,13,14,16,20,21,22,23,25,26],[1,3,4,5]],business:[[0,3,4,7,12,13,14,16,21,22,26],[3,4,5]],house:[[3,4,11,13,16,20,22,23,25,26],[1,3,4,5]],learn:[[0,4,6,7,12,14,21,26],[1,3,4,5]]};
+$("#mfb").onclick=()=>{const [nks,wds]=MU[$("#mfp").value],box=$("#mfo"),out=[];
+try{L=cur();const n=new Date(),c0=Date.UTC(n.getFullYear(),n.getMonth(),n.getDate());
+for(let i=0;i<45;i++){const c=c0+i*D,d=day(L,c),t=tithi(d.sr),w=new Date(c).getUTCDay(),ni=Math.floor(moonL(d.sr)/(360/27)),tt=t%15;let sc=0;const why=[];
+if(nks.includes(ni)){sc+=2;why.push("favourable nakshatra")}if(wds.includes(w)){sc+=2;why.push("favourable weekday")}if([2,3,5,7,10,11,13,0].includes(tt)&&t!==30){sc+=1;why.push("good tithi")}if(t<=15)sc+=1;if([4,9,14].includes(tt))sc-=2;if(t===30)sc-=3;out.push({c,d,t,w,ni,sc,why})}
+const top=out.filter(x=>x.sc>=4).sort((a,b)=>b.sc-a.sc||a.c-b.c).slice(0,6),rg=(a,b)=>tmf(a)+" – "+tmf(b);
+box.innerHTML=top.length?`<ul class="ql">${top.map(x=>{const u=(x.d.ss-x.d.sr)/8,dl=x.d.ss-x.d.sr,k=[8,2,7,5,6,4,3][x.w];return `<li><span><b>${dstr(x.c,{weekday:"long",day:"numeric",month:"short"})}</b> · ${pk(x.t).split(" ")[0]} ${tname(x.t)} · ${((TRL&&TRL.n)||NAK)[x.ni]} · ${x.sc}/6<br><small>Best window: ${x.w===3?rg(x.d.sr,x.d.sr+u)+" (Labh slot)":rg(x.d.sr+7*dl/15,x.d.sr+8*dl/15)+" (Abhijit)"}. Avoid Rahu Kaal ${rg(x.d.sr+(k-1)*u,x.d.sr+k*u)}. ${x.why.join(", ")}.</small></span></li>`}).join("")}</ul>`:"No strong dates in the next 45 days. Try another occasion.";
+}catch(e){box.textContent="Could not calculate. Check the location and timezone above."}};
+{const h=$("#me").onclick;$("#me").onclick=e=>{h(e);renderDC();renderKM()}}
+// ---- appearance & sounds ----
+const saveST=()=>lsSet("panchang-settings",JSON.stringify(ST));
+function applyTheme(force){const r=document.documentElement;if(ST.theme!=="auto")r.setAttribute("data-theme",ST.theme);else if(force)r.removeAttribute("data-theme")}
+function applyBg(){const b=document.body;b.classList.toggle("bgimg",!!bgData);b.style.setProperty("--bgimg",bgData?`url("${bgData}")`:"none");b.style.setProperty("--dim",ST.dim/100)}
+function loadBg(f){const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,1400/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext("2d").drawImage(im,0,0,c.width,c.height);bgData=c.toDataURL("image/jpeg",.8);if(!lsSet("panchang-bg",bgData))$("#msg").textContent="The picture is too large to save, so it is used for this visit only.";applyBg()};im.onerror=()=>{$("#msg").textContent="That file is not a picture this page can read."};im.src=r.result};r.readAsDataURL(f)}
+$("#slg").innerHTML=Object.entries(LANGS).map(([k,v])=>`<option value="${k}">${v[0]}</option>`).join("");$("#slg").value=ST.lang||"en";$("#slg").onchange=e=>setLang(e.target.value);setLang(ST.lang||"en",true);$("#sth").value=ST.theme;$("#dim").value=ST.dim;applyTheme(false);applyBg();
+$("#sth").onchange=e=>{ST.theme=e.target.value;saveST();applyTheme(true)};
+$("#dim").oninput=e=>{ST.dim=+e.target.value;saveST();applyBg()};
+$("#bgx").onclick=()=>{bgData="";try{localStorage.removeItem("panchang-bg")}catch(e){}applyBg()};
+$("#bgf").onchange=e=>{const f=e.target.files[0];if(f)loadBg(f)};
+for(const k of ["a","n"]){const kind=k==="a"?"alarm":"notif",tk=kind+"Tone",vk=kind+"Vol",sel=$("#s"+k+"t"),vol=$("#s"+k+"v"),out=$("#o"+k);
+sel.innerHTML=[...Object.keys(TONES),"Custom"].map(n=>`<option>${n}</option>`).join("");sel.value=ST[tk];vol.value=ST[vk];out.textContent=ST[vk]+"%";
+sel.onchange=()=>{ST[tk]=sel.value;saveST()};
+vol.oninput=()=>{ST[vk]=+vol.value;out.textContent=vol.value+"%";saveST()};
+$("#s"+k+"p").onclick=()=>{try{ctx().resume()}catch(e){}try{setTimeout(sound(kind),3000)}catch(e){$("#msg").textContent="Sound is not available in this view."}};
+$("#s"+k+"f").onchange=e=>{const f=e.target.files[0];if(!f)return;if(f.size>1e6){$("#msg").textContent="That audio file is over 1 MB. Pick a shorter clip.";return}
+const r=new FileReader();r.onload=()=>{if(lsSet("panchang-snd-"+kind,r.result)){ST[tk]="Custom";sel.value="Custom";saveST();$("#msg").textContent=""}else $("#msg").textContent="Could not save that sound on this device."};r.readAsDataURL(f)}}
+if(typeof Astronomy==="undefined")$("#msg").textContent="The astronomy library did not load. Check your connection and reload.";else{sel=Date.UTC(y,mo,now.getDate());render()}
+if("serviceWorker"in navigator)addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+</script></body></html>
