@@ -57,8 +57,7 @@ section.cm>h3:first-child{cursor:pointer;user-select:none}section.cm>h3:first-ch
 <header><h1 style="display:flex;align-items:center;gap:10px"><svg width="44" height="44" viewBox="0 0 512 512" aria-hidden="true"><use href="#kl"/></svg><span>kalaNDR - Smart Vedic Calendar</span></h1><p>A Panchang engine, not a date list. Tithi, paksha, nakshatra, moon shape and festival dates are calculated from the sky above the location you pick.</p></header>
 <div class="bar" id="vw" style="margin-bottom:12px"><b data-t="View">View</b> <button id="vc">Calendar only</button> <button id="vk">Collapse all</button> <button id="ve">Expand all</button></div>
 <div class="bar" id="jb" style="margin-bottom:12px"><label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="jon"> <span><b>I follow Jain traditions</b>: add Jain festivals and important dates</span></label>
-<span id="jq" hidden><label>Which tradition do you follow? <select id="jsc"><option value="">Choose...</option><option value="s">Shvetambar</option><option value="d">Digambar</option><option value="b">Not sure, show all</option></select></label> <button id="jsv">Save</button> <span id="jmsg" class="note"></span></span>
-<span id="jdn" hidden>Jain calendar is on: <b id="jtx"></b> <button id="jed">Change</button></span></div>
+<span id="jq" hidden><label>Which tradition do you follow? <select id="jsc"><option value="">Choose...</option><option value="s">Shvetambar</option><option value="d">Digambar</option><option value="b">Not sure, show all</option></select></label> <button id="jsv">Save</button> <span id="jmsg" class="note"></span></span></div>
 <section class="cm" id="me"></section>
 <section class="cm" id="dc"></section>
 <section class="cm" id="cy" hidden></section>
@@ -68,7 +67,7 @@ section.cm>h3:first-child{cursor:pointer;user-select:none}section.cm>h3:first-ch
 <label>Language<select id="slg"><option value="en">English</option><option value="hi">हिन्दी</option></select></label>
 <span id="xl" class="note"></span><label>Background picture<input id="bgf" type="file" accept="image/*"></label>
 <label>Picture dimming<input id="dim" type="range" min="0" max="90"></label>
-<button id="bgx">Remove picture</button></div>
+<button id="bgx">Remove picture</button> <span id="jrw" hidden><button id="jrs">Reset my Jain calendar choice</button></span></div>
 <div class="bar" style="border:0;padding:10px 0 0;background:none">
 <label>Alarm ringtone<select id="sat"></select></label><label>Upload your own<input id="saf" type="file" accept="audio/*"></label>
 <label>Volume <output id="oa"></output><input id="sav" type="range" min="0" max="100"></label><button id="sap">Play</button></div>
@@ -388,7 +387,7 @@ ${extra(c)}<div class="mood" style="margin-top:10px"><b>${T("How are you feeling
 <p class="note">${lt("disc",DISC)}</p>`;qTr(q)}catch(x){box.innerHTML=`<button data-me="edit">${T("Edit details")}</button> <span class="note">Could not calculate the chart. Check the timezone.</span>`}}
 
 $("#me").onclick=e=>{const mb=e.target.closest("[data-mood]");if(mb){ME.mood={d:rdStr(),v:mb.dataset.mood};saveME();renderMe();return}
-const b=e.target.closest("[data-me]"),a=b&&b.dataset.me;if(a==="skip"){ME={skip:true};saveME();renderMe()}else if(a==="edit"){ME=Object.assign(ME||{},{edit:true,skip:false});renderMe()}else if(a==="clear"){ME=null;try{localStorage.removeItem("panchang-me")}catch(x){}renderMe()}
+const b=e.target.closest("[data-me]"),a=b&&b.dataset.me;if(a==="skip"){ME={skip:true};saveME();renderMe()}else if(a==="edit"){ME=Object.assign(ME||{},{edit:true,skip:false});renderMe()}else if(a==="clear"){ME=null;ST.jain=false;delete ST.jainS;try{jainApply()}catch(e){}try{localStorage.removeItem("panchang-me")}catch(x){}renderMe()}
 else if(a==="save"){const m={name:$("#bn").value.trim(),dob:$("#bd").value,tob:$("#bt").value||"12:00",gender:$("#bg").value,place:{name:$("#bpi").value.trim()||"custom",cc:$("#bpc").value,st:$("#bps").value.trim(),lat:+$("#bla").value,lon:+$("#blo").value,tz:$("#btz").value.trim()}},say=t=>$("#bm").textContent=t;
 if(!m.dob){say("Enter your date of birth.");return}if(!$("#bla").value||!$("#blo").value||!m.place.tz){say("Search and pick your place of birth, or enter latitude, longitude and timezone.");return}
 try{reading(m)}catch(x){say("Could not calculate. Check the timezone, for example Asia/Kolkata.");return}m.mood=ME&&ME.mood;m.cy=ME&&ME.cy;ME=m;saveME();renderMe();try{applySecs();render();renderCY()}catch(_){}}};
@@ -619,12 +618,12 @@ $("#shl").onchange=e=>{const c=e.target.closest("[data-s]");if(!c)return;const h
 $("#shc").onclick=()=>{ST.hide=SECS.map(x=>x[0]);ST.calOnly=true;saveST();applySecs()};$("#sha").onclick=()=>{ST.hide=[];ST.calOnly=false;saveST();applySecs()};
 buildSecs();initGm();renderEV();if(!$("#nw").hidden)loadNews();
 $("#sth").onchange=e=>{ST.theme=e.target.value;saveST();applyTheme(true)};
-let jedit=false;const JNM={s:"Shvetambar",d:"Digambar",b:"All Jain traditions"};
-function jainUI(){const on=!!ST.jain,q=on&&(jedit||!ST.jainS);$("#jon").checked=on;$("#jq").hidden=!q;$("#jdn").hidden=!(on&&!q);if(q)$("#jsc").value=ST.jainS||"";if(ST.jainS)$("#jtx").textContent=JNM[ST.jainS]||""}
+const jainSaved=()=>!!(ST.jain&&ST.jainS);
+function jainUI(){const sv=jainSaved();$("#jb").hidden=sv;$("#jrw").hidden=!sv;$("#jon").checked=!!ST.jain;$("#jq").hidden=!(ST.jain&&!ST.jainS);if(ST.jain&&!ST.jainS)$("#jsc").value=""}
 function jainApply(){saveST();rc.clear();applyJInfo();jainUI();try{render()}catch(e){}}
-$("#jon").onchange=e=>{ST.jain=e.target.checked;jedit=false;$("#jmsg").textContent="";jainApply()};
-$("#jsv").onclick=()=>{const v=$("#jsc").value;if(!v){$("#jmsg").textContent="Please choose one option first.";return}ST.jain=true;ST.jainS=v;jedit=false;$("#jmsg").textContent="";jainApply()};
-$("#jed").onclick=()=>{jedit=true;jainUI()};
+$("#jon").onchange=e=>{ST.jain=e.target.checked;if(!ST.jain)delete ST.jainS;$("#jmsg").textContent="";jainApply()};
+$("#jsv").onclick=()=>{const v=$("#jsc").value;if(!v){$("#jmsg").textContent="Please choose one option first.";return}ST.jain=true;ST.jainS=v;$("#jmsg").textContent="";jainApply()};
+$("#jrs").onclick=()=>{ST.jain=false;delete ST.jainS;jainApply();try{$("#jb").scrollIntoView({block:"center"})}catch(e){}};
 applyJInfo();jainUI();
 $("#dim").oninput=e=>{ST.dim=+e.target.value;saveST();applyBg()};
 $("#bgx").onclick=()=>{bgData="";try{localStorage.removeItem("panchang-bg")}catch(e){}applyBg()};
