@@ -88,12 +88,8 @@ body{padding-left:176px}main{padding-bottom:40px}}
 <section class="cm" id="mf"><h3 data-t="Muhurat finder">Muhurat finder</h3><div class="bar" style="border:0;padding:8px 0 0;background:none"><label>Occasion<select id="mfp"><option value="travel">Travel</option><option value="property">Buying property or a vehicle</option><option value="business">Starting a business</option><option value="house">Housewarming (griha pravesh)</option><option value="learn">Starting study or naming a child</option></select></label><button id="mfb" data-t="Find dates">Find dates</button></div><div id="mfo"></div><p class="note" style="margin:8px 0 0">Uses the next 45 days at the location chosen above. For weddings and major rites, ask a priest.</p></section>
 <section class="cm" id="ev"><h3 data-t="Professional events">Professional events</h3><label style="max-width:320px">Your profession<select id="evs"></select></label><div id="evb"></div></section>
 <section class="cm" id="nw"><h3 data-t="News today">News today</h3><div id="nwt" style="margin:6px 0"></div><div id="nwl"></div></section>
-</div><div class="pg" id="pg-me" hidden><section class="cm" id="acct"><h3>Account</h3><div id="acb"></div>
-<details style="margin-top:8px"><summary>Sign-in setup (app owner)</summary>
-<p class="note" style="margin:6px 0">Sign-in needs a free Google Client ID and/or Facebook App ID for kalandr.in. Paste them once; they are saved on this device only.</p>
-<div class="bar" style="border:0;padding:0;background:none"><label>Google Client ID<input id="gci" autocomplete="off" style="width:240px" placeholder="123-abc.apps.googleusercontent.com"></label><label>Facebook App ID<input id="fai" autocomplete="off" style="width:160px" placeholder="1234567890"></label><button id="acs">Save</button></div>
-<ol class="note" style="margin:6px 0 0;padding-left:18px"><li>Google: console.cloud.google.com, Credentials, Create OAuth client ID (Web application), add <b>https://kalandr.in</b> under Authorized JavaScript origins.</li><li>Facebook: developers.facebook.com, Create app (Consumer), add Facebook Login for Web, site URL <b>https://kalandr.in</b>.</li></ol></details>
-<p class="note" style="margin:8px 0 0">Signing in only shows your name and photo on this device. Your data is not uploaded anywhere.</p></section><section class="cm" id="me"></section>
+</div><div class="pg" id="pg-me" hidden><section class="cm" id="acct"><h3>Account &amp; sync</h3><div id="acb"></div><label id="asw" hidden style="flex-direction:row;align-items:center;gap:8px;margin-top:10px"><input type="checkbox" id="asy"> <span>Keep my reminders, profile and settings in sync across my devices</span></label>
+<p class="note" id="acn" style="margin:8px 0 0">Sign in to keep your reminders, birth details, cycle entries and settings on every device. Without signing in, everything stays only on this device.</p></section><section class="cm" id="me"></section>
 <section class="cm" id="cy" hidden></section>
 <section class="cm" id="gm"><h3 data-t="Bills & travel">Bills &amp; travel</h3>
 <p class="note" style="margin:4px 0 8px">Add credit card, loan and other bills yourself, or let the app read your Gmail for due dates and trips. They appear in the calendar squares and the reminders list.</p>
@@ -671,27 +667,51 @@ try{new MutationObserver(chip).observe(document.getElementById("mt"),{childList:
 let t0=(location.hash||"").slice(1);if(!T.includes(t0)){try{t0=localStorage.getItem("kalandr-tab")||"home"}catch(_){t0="home"}}
 try{history.replaceState({tab:t0},"","#"+t0)}catch(_){}show(t0,false);})();
 </script><script>
-(function(){const $=s=>document.getElementById(s),K="kalandr-user",C="kalandr-authcfg";
+(function(){const $=id=>document.getElementById(id),V="https://www.gstatic.com/firebasejs/10.12.2/",KEYS=["panchang-items","panchang-me","panchang-settings"];
+const CFG={apiKey:"AIzaSyC64D5yEai7avMNOtL1mWm1uHeUYi43SWc",authDomain:"kalandr-1cce3.firebaseapp.com",projectId:"kalandr-1cce3",storageBucket:"kalandr-1cce3.firebasestorage.app",messagingSenderId:"399966679459",appId:"1:399966679459:web:2531c047886eb059a2ea16"};
 const G='<svg width="20" height="20" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.9 6.1C12.4 13.6 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.1 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.4c-.5 2.9-2.2 5.3-4.6 6.9l7.1 5.5c4.3-4 6.7-9.9 6.7-16.9z"/><path fill="#FBBC05" d="M10.5 28.7a14.5 14.5 0 0 1 0-9.4l-7.9-6.1a24 24 0 0 0 0 21.6l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.1-5.5c-2 1.4-4.9 2.3-8.8 2.3-6.3 0-11.6-4.1-13.5-9.8l-7.9 6.1C6.5 42.6 14.6 48 24 48z"/></svg>';
-const F='<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="#1877F2" d="M24 12a12 12 0 1 0-13.9 11.9v-8.4H7.1V12h3V9.4c0-3 1.8-4.7 4.5-4.7 1.3 0 2.7.2 2.7.2v3h-1.5c-1.5 0-2 .9-2 1.9V12h3.4l-.5 3.5h-2.9v8.4A12 12 0 0 0 24 12z"/></svg>';
-const get=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))||d}catch(_){return d}},set=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(_){}};
+const ls={g:k=>{try{return localStorage.getItem(k)}catch(_){return null}},s:(k,v)=>{try{localStorage.setItem(k,v)}catch(_){}},r:k=>{try{localStorage.removeItem(k)}catch(_){}}};
 const esc=t=>String(t||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-function cfg(){return Object.assign({g:"",f:""},get(C,{}))}
-function msg(t){const m=$("acm");if(m)m.textContent=t}
-function draw(){const u=get(K,null),b=$("acb");if(!b)return;const c=cfg();$("gci").value=c.g;$("fai").value=c.f;
-if(u){b.innerHTML='<div class="acu">'+(u.pic?'<img alt="" referrerpolicy="no-referrer" src="'+esc(u.pic)+'">':'<span class="av">'+esc((u.name||"?")[0])+'</span>')+'<div><b>'+esc(u.name)+'</b><br><span class="note">'+esc(u.email||"Signed in with "+u.via)+'</span></div></div><button id="aso">Sign out</button><span id="acm" class="note"></span>'}
-else b.innerHTML='<button class="ab" id="agb">'+G+'Continue with Google</button><button class="ab" id="afb">'+F+'Continue with Facebook</button><span id="acm" class="note" style="flex-basis:100%"></span>'}
-function done(u){set(K,u);try{if(typeof ME==="object"&&ME&&!ME.name&&u.name){ME.name=u.name;saveME();renderMe()}}catch(_){}draw()}
-function load(src,id){return new Promise((ok,no)=>{if(document.getElementById(id))return ok();const s=document.createElement("script");s.id=id;s.src=src;s.async=true;s.onload=ok;s.onerror=()=>no(new Error("load"));document.head.appendChild(s)})}
-async function google(){const c=cfg();if(!c.g)return msg("Google sign-in is not set up yet. Open Sign-in setup below and paste your Google Client ID.");
-try{msg("Opening Google...");await load("https://accounts.google.com/gsi/client","gsi");
-google.accounts.oauth2.initTokenClient({client_id:c.g,scope:"openid email profile",callback:async r=>{if(r.error)return msg("Google sign-in was cancelled.");
-try{const j=await (await fetch("https://www.googleapis.com/oauth2/v3/userinfo",{headers:{Authorization:"Bearer "+r.access_token}})).json();done({via:"Google",name:j.name,email:j.email,pic:j.picture})}catch(_){msg("Could not read your Google profile.")}}}).requestAccessToken()}catch(_){msg("Could not reach Google. Check your internet connection.")}}
-async function fb(){const c=cfg();if(!c.f)return msg("Facebook sign-in is not set up yet. Open Sign-in setup below and paste your Facebook App ID.");
-try{msg("Opening Facebook...");await load("https://connect.facebook.net/en_US/sdk.js","fbsdk");FB.init({appId:c.f,version:"v19.0",cookie:false,xfbml:false});
-FB.login(r=>{if(!r.authResponse)return msg("Facebook sign-in was cancelled.");FB.api("/me",{fields:"name,email,picture.width(96)"},j=>{if(!j||j.error)return msg("Could not read your Facebook profile.");done({via:"Facebook",name:j.name,email:j.email,pic:j.picture&&j.picture.data&&j.picture.data.url})})},{scope:"public_profile,email"})}catch(_){msg("Could not reach Facebook. Check your internet connection.")}}
-$("acct").addEventListener("click",e=>{const t=e.target.closest("button");if(!t)return;
-if(t.id==="agb")google();else if(t.id==="afb")fb();else if(t.id==="aso"){try{localStorage.removeItem(K)}catch(_){}draw()}
-else if(t.id==="acs"){set(C,{g:$("gci").value.trim(),f:$("fai").value.trim()});msg("Saved.")}});
-draw();})();
+let fb=null,user=null,status="",busy=false,unsub=null,timer=null;
+const syncOn=()=>ls.g("kalandr-sync")!=="0";
+const snap=()=>KEYS.map(k=>ls.g(k)||"");
+const hsh=a=>{let h=5381;for(const x of a)for(let i=0;i<x.length;i++)h=(h*33^x.charCodeAt(i))>>>0;return h+":"+a.map(x=>x.length).join(",")};
+function draw(){const b=$("acb");if(!b)return;
+if(user){b.innerHTML='<div class="acu">'+(user.photoURL?'<img alt="" referrerpolicy="no-referrer" src="'+esc(user.photoURL)+'">':'<span class="av">'+esc((user.displayName||user.email||"?")[0])+'</span>')+'<div><b>'+esc(user.displayName||"Signed in")+'</b><br><span class="note">'+esc(user.email||"")+'</span></div></div><button id="ayn">Sync now</button><button id="aso">Sign out</button><button id="adl">Delete my cloud data</button><span class="note" id="ast" style="flex-basis:100%">'+esc(status)+'</span>';$("asw").hidden=false;$("asy").checked=syncOn();$("acn").textContent="Your data is stored privately under your account. Only you can read it."}
+else{b.innerHTML='<button class="ab" id="agb">'+G+'Continue with Google</button><span class="note" id="ast" style="flex-basis:100%">'+esc(status)+'</span>';$("asw").hidden=true;$("acn").textContent="Sign in to keep your reminders, birth details, cycle entries and settings on every device. Without signing in, everything stays only on this device."}}
+function say(t){status=t;const e=$("ast");if(e)e.textContent=t}
+async function boot(){if(fb)return fb;const[a,au,st]=await Promise.all([import(V+"firebase-app.js"),import(V+"firebase-auth.js"),import(V+"firebase-firestore.js")]);
+const app=a.initializeApp(CFG);fb={a,au,st,auth:au.getAuth(app),db:st.getFirestore(app)};return fb}
+const ref=()=>fb.st.doc(fb.db,"users",user.uid,"data","main");
+function applyRemote(d){const cur=snap(),nw=[d.items||"",d.me||"",d.settings||""];ls.s("kalandr-ut",String(d.ut||0));
+let ch=false;KEYS.forEach((k,i)=>{if(nw[i]&&nw[i]!==cur[i]){ls.s(k,nw[i]);ch=true}});ls.s("kalandr-h",hsh(snap()));
+if(ch){const f=document.activeElement;if(f&&/INPUT|SELECT|TEXTAREA/.test(f.tagName)){say("Newer data is available from another device. Reload to see it.");return}say("Updated from your other device.");setTimeout(()=>location.reload(),400)}}
+async function upload(){if(!user||!syncOn()||!fb)return;const a=snap(),ut=Date.now();
+try{await fb.st.setDoc(ref(),{items:a[0],me:a[1],settings:a[2],ut});ls.s("kalandr-ut",String(ut));ls.s("kalandr-h",hsh(a));say("Synced just now.")}catch(e){say("Could not sync. Check your internet connection.")}}
+function mergeItems(l,r){let A=[],B=[];try{A=JSON.parse(l||"[]")}catch(_){}try{B=JSON.parse(r||"[]")}catch(_){}const m=new Map();A.forEach(x=>x&&m.set(x.id,x));B.forEach(x=>x&&m.set(x.id,x));return JSON.stringify([...m.values()])}
+async function first(){if(!syncOn())return say("Sync is off on this device.");
+try{const d=await fb.st.getDoc(ref()),loc=snap();
+if(!d.exists()){await upload();return}
+const r=d.data();
+if(ls.g("kalandr-uid")!==user.uid){ls.s("kalandr-uid",user.uid);const mi=mergeItems(loc[0],r.items),me=r.me||loc[1],se=r.settings||loc[2];ls.s("kalandr-ut","0");
+const same=mi===(loc[0]||"[]")&&me===loc[1]&&se===loc[2];ls.s("panchang-items",mi);ls.s("panchang-me",me);ls.s("panchang-settings",se);
+await upload();if(!same||(r.items||"")!==mi){const f=document.activeElement;if(!(f&&/INPUT|SELECT|TEXTAREA/.test(f.tagName)))setTimeout(()=>location.reload(),600)}return}
+if((r.ut||0)>Number(ls.g("kalandr-ut")||0))applyRemote(r);else if(hsh(loc)!==ls.g("kalandr-h"))await upload();else say("Up to date.")}catch(e){say("Could not reach your cloud data. Check your internet connection.")}}
+function watch(){if(unsub)unsub();unsub=fb.st.onSnapshot(ref(),s=>{if(!s.exists()||!syncOn())return;const r=s.data();if((r.ut||0)>Number(ls.g("kalandr-ut")||0)&&!s.metadata.hasPendingWrites)applyRemote(r)},()=>{});
+if(timer)clearInterval(timer);timer=setInterval(()=>{if(user&&syncOn()&&!document.hidden&&hsh(snap())!==ls.g("kalandr-h"))upload()},4000)}
+function listen(){if(fb.listening)return;fb.listening=1;fb.au.onAuthStateChanged(fb.auth,async u=>{user=u;if(u){ls.s("kalandr-hint","1");draw();await first();watch()}else{ls.r("kalandr-hint");if(unsub){unsub();unsub=null}if(timer){clearInterval(timer);timer=null}draw()}})}
+async function init(){try{await boot();listen()}catch(e){say("Could not load sign-in. Check your internet connection.")}}
+async function signin(){if(busy)return;busy=true;say("Opening Google...");try{await boot();const p=new fb.au.GoogleAuthProvider();
+listen();
+await fb.au.signInWithPopup(fb.auth,p)}catch(e){const c=e&&e.code||"";say(c.includes("popup-closed")||c.includes("cancelled")?"Sign-in was cancelled.":c.includes("unauthorized-domain")?"This address is not allowed yet. Add kalandr.in under Authorized domains in Firebase.":c.includes("operation-not-allowed")?"Google sign-in is not turned on in Firebase yet.":"Could not sign in. Check your internet connection and try again.");draw();say(status)}busy=false}
+$("acct").addEventListener("click",async e=>{const t=e.target.closest("button");if(!t)return;
+if(t.id==="agb")signin();
+else if(t.id==="ayn"){say("Syncing...");await first();ls.s("kalandr-h","");await upload()}
+else if(t.id==="aso"){try{await fb.au.signOut(fb.auth)}catch(_){}say("Signed out. Your data stays on this device.")}
+else if(t.id==="adl"){if(!confirm("Delete your cloud copy and your sign-in account? Data on this device stays."))return;
+try{await fb.st.deleteDoc(ref());await fb.au.deleteUser(fb.auth.currentUser);ls.r("kalandr-uid");ls.r("kalandr-ut");say("Your cloud data and account were deleted.")}catch(er){say(er&&er.code==="auth/requires-recent-login"?"For safety, sign out, sign in again, then press Delete again.":"Could not delete. Try again.")}}});
+$("acct").addEventListener("change",e=>{if(e.target.id==="asy"){ls.s("kalandr-sync",e.target.checked?"1":"0");say(e.target.checked?"Sync is on.":"Sync is off on this device.");if(e.target.checked)first()}});
+draw();
+if(ls.g("kalandr-hint")==="1"){const go=()=>init();("requestIdleCallback"in window)?requestIdleCallback(go,{timeout:2500}):setTimeout(go,800)}
+})();
 </script><script>if("serviceWorker" in navigator&&location.protocol==="https:"){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}</script></body></html>
