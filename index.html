@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><title>kalaNDR - Smart Vedic Calendar</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#C2680F"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><title>kalaNDR - Smart Vedic Calendar</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link href="https://fonts.googleapis.com/css2?family=Tiro+Devanagari+Hindi&family=Hind:wght@400;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/astronomy-engine@2.1.19/astronomy.browser.min.js"></script>
@@ -636,4 +636,4 @@ $("#s"+k+"p").onclick=()=>{try{ctx().resume()}catch(e){}try{setTimeout(sound(kin
 $("#s"+k+"f").onchange=e=>{const f=e.target.files[0];if(!f)return;if(f.size>1e6){$("#msg").textContent="That audio file is over 1 MB. Pick a shorter clip.";return}
 const r=new FileReader();r.onload=()=>{if(lsSet("panchang-snd-"+kind,r.result)){ST[tk]="Custom";sel.value="Custom";saveST();$("#msg").textContent=""}else $("#msg").textContent="Could not save that sound on this device."};r.readAsDataURL(f)}}
 if(typeof Astronomy==="undefined")$("#msg").textContent="The astronomy library did not load. Check your connection and reload.";else{sel=Date.UTC(y,mo,now.getDate());render()}
-</script></body></html>
+</script><script>if("serviceWorker" in navigator&&location.protocol==="https:"){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}</script></body></html>
