@@ -1,4 +1,4 @@
-const C="kalandr-v29";
+const C="kalandr-v30";
 self.addEventListener("install",e=>{e.waitUntil(caches.open(C).then(c=>c.addAll(["./","index.html","icon-192.png"])).catch(()=>{}));self.skipWaiting()});
 self.addEventListener("activate",e=>{e.waitUntil(self.clients.claim())});
 self.addEventListener("fetch",e=>{if(e.request.method!=="GET")return;

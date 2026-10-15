@@ -44,7 +44,7 @@ body.bgimg::before{background:var(--bgimg) center/cover no-repeat}body.bgimg::af
 .ch{display:inline-block;border:1px solid var(--ln);border-radius:6px;padding:2px 6px;margin:2px;font-size:.78rem}.ch.g{border-color:var(--ac);color:var(--ac)}
 a.btn{color:var(--fg);background:var(--bg);border:1px solid var(--ln);border-radius:6px;padding:6px 8px;text-decoration:none;display:inline-block}
 #det details{border-top:1px solid var(--ln);padding:6px 0}#det summary{cursor:pointer}#det details p{margin:4px 0 0;color:var(--mu)}
-section.cm>h3:first-child{cursor:pointer;user-select:none}section.cm>h3:first-child::before{content:"▾ ";color:var(--ac)}section.cm.col>h3:first-child::before{content:"▸ "}section.cm.col>*:not(h3:first-child){display:none!important}.cell i.cy{color:#c2185b;font-weight:600}.cell i.cy-f,.cell i.cy-o{color:#7b4bb7}.cell i.cy-e{font-weight:400}#nwt button[aria-pressed=true]{border-color:var(--ac);color:var(--ac)}.rdn button{min-width:2.2rem}.rdn{display:inline-flex;gap:6px;align-items:center;flex-wrap:wrap}.stars{font-size:1.3rem;color:#d99a00;letter-spacing:2px}.sw{display:inline-block;width:14px;height:14px;border-radius:50%;border:1px solid var(--ln);vertical-align:-2px;margin-inline-end:4px}#gq{margin:8px 0 2px;font-size:1.05rem}table.t td,table.t th{padding:3px 8px;font-size:.85rem}.mood button[aria-pressed=true]{border-color:var(--ac);color:var(--ac)}
+section.cm>h3:first-child{cursor:pointer;user-select:none}section.cm>h3:first-child::before{content:"▾ ";color:var(--ac)}section.cm.col>h3:first-child::before{content:"▸ "}section.cm.col>*:not(h3:first-child){display:none!important}.cell i.cy{color:#c2185b;font-weight:600}.cell i.cy-f,.cell i.cy-o{color:#7b4bb7}.cell i.cy-e{font-weight:400}.cy-w{font-style:italic;opacity:.8}.cy-l{color:#b3261e;font-weight:600}#nwt button[aria-pressed=true]{border-color:var(--ac);color:var(--ac)}.rdn button{min-width:2.2rem}.rdn{display:inline-flex;gap:6px;align-items:center;flex-wrap:wrap}.stars{font-size:1.3rem;color:#d99a00;letter-spacing:2px}.sw{display:inline-block;width:14px;height:14px;border-radius:50%;border:1px solid var(--ln);vertical-align:-2px;margin-inline-end:4px}#gq{margin:8px 0 2px;font-size:1.05rem}table.t td,table.t th{padding:3px 8px;font-size:.85rem}.mood button[aria-pressed=true]{border-color:var(--ac);color:var(--ac)}
 .tcard{width:84px;height:136px;border:2px solid var(--ac);border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:var(--cd);color:var(--ac);font:400 1.7rem Georgia,serif}.tcard.rv{transform:rotate(180deg)}
 
 #hd{display:flex;align-items:center;gap:8px;padding:2px 0 4px}#hd b{font:700 1.3rem "Playfair Display",Georgia,serif;color:var(--ac)}
@@ -59,9 +59,10 @@ main{padding-bottom:96px}
 @media(min-width:900px){#tb{top:0;right:auto;bottom:0;width:176px;flex-direction:column;justify-content:flex-start;gap:6px;padding:18px 10px;border-top:0;border-right:1px solid var(--ln);box-shadow:none}
 #tb button{flex:none;flex-direction:row;gap:12px;font-size:1rem;padding:10px 14px;justify-content:flex-start}
 body{padding-left:176px}main{padding-bottom:40px}}
-#jb>label{flex-direction:row!important}#jb input[type=checkbox]{flex:none}
+.jbx{margin:12px 0 4px;padding:10px 12px;border:1px dashed var(--ln);border-radius:12px;background:var(--bg)}.jl{flex-direction:row!important;align-items:center;gap:8px}.jbx input[type=checkbox]{flex:none}#jq{margin-top:8px}
 #acb{display:flex;flex-wrap:wrap;gap:10px;align-items:center}.acu{display:flex;align-items:center;gap:12px}.acu img,.acu .av{width:48px;height:48px;border-radius:50%;object-fit:cover;background:var(--fe);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--ac)}
 .ab{display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:10px;font-weight:600;min-height:44px}.ab svg{flex:none}
+.cell{position:relative}.wx{position:absolute;right:3px;bottom:2px;font-size:.8rem;line-height:1}@media(max-width:719px){.wx{font-size:.7rem;right:2px;bottom:1px}}.wxs{white-space:nowrap}
 </style></head><body><svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="kl" viewBox="0 0 512 512"><defs><linearGradient id="klg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFAE4D"/><stop offset="1" stop-color="#D4540A"/></linearGradient>
 <mask id="klm"><rect width="512" height="512" fill="#fff"/><circle cx="296" cy="232" r="84" fill="#000"/></mask></defs>
 <rect width="512" height="512" rx="116" fill="url(#klg)"/>
@@ -71,9 +72,7 @@ body{padding-left:176px}main{padding-bottom:40px}}
 <path d="M330 186 C352 212 360 228 330 258 C300 228 308 212 330 186Z" fill="#FFE08A"/><path d="M330 222 C340 234 340 244 330 252 C320 244 320 234 330 222Z" fill="#E8761E" opacity=".55"/></symbol></svg><main>
 <div id="alert" role="alert" hidden><b id="at"></b><span><button id="snz">Snooze 5 min</button> <button id="dsm">Dismiss</button></span></div>
 <header id="hd"><svg width="34" height="34" viewBox="0 0 512 512" aria-hidden="true"><use href="#kl"/></svg><b>kalaNDR</b><button id="lchip" aria-label="Change location">📍 <span id="lct">Location</span></button></header><div class="bar" id="vw" hidden style="margin-bottom:12px"><b data-t="View">View</b> <button id="vc">Calendar only</button> <button id="vk">Collapse all</button> <button id="ve">Expand all</button></div>
-<div class="pg" id="pg-home"><div class="bar" id="jb" style="margin-bottom:12px"><label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="jon"> <span><b>I follow Jain traditions</b>: add Jain festivals and important dates</span></label>
-<span id="jq" hidden><label>Which tradition do you follow? <select id="jsc"><option value="">Choose...</option><option value="s">Shvetambar</option><option value="d">Digambar</option><option value="b">Not sure, show all</option></select></label> <button id="jsv">Save</button> <span id="jmsg" class="note"></span></span></div>
-<div id="msg" role="status"></div>
+<div class="pg" id="pg-home"><div id="msg" role="status"></div>
 <nav class="mn"><button id="pv" aria-label="Previous month">‹</button><h2 id="mt"></h2><button id="td" class="tdy">Today</button><button id="nx" aria-label="Next month">›</button></nav>
 <div class="gw"><div id="grid"></div></div>
 </div><div class="pg" id="pg-fest" hidden><section class="cm" id="sc-fl"><h3 data-t="Festivals this month">Festivals this month</h3><ul id="fl" class="ql"></ul></section>
@@ -202,7 +201,7 @@ const tmf=v=>v?new Intl.DateTimeFormat(loc(),{timeZone:L.tz,hour:"numeric",minut
 // ---- ui ----
 let L,y,mo,sel,pm="a",RDs=null;
 const rdDate=()=>{if(!RDs)return new Date();const[a,b,c]=RDs.split("-").map(Number);return new Date(a,b-1,c,12,0)},rdStr=()=>RDs||lds(new Date());
-function rdNav(){const d=rdDate(),t0=lds(new Date()),isT=!RDs||RDs===t0,tm=new Date();tm.setDate(tm.getDate()+1);const lb=isT?"Today":RDs===lds(tm)?"Tomorrow":"";return `<span class="rdn"><button data-rd="-1" aria-label="${T("Previous day")}">‹</button> <b>${d.toLocaleDateString(loc(),{weekday:"short",day:"numeric",month:"short",year:"numeric"})}</b>${lb?" ("+T(lb)+")":""} <button data-rd="1" aria-label="${T("Next day")}">›</button> <button data-rd="0">${T("Today")}</button></span>`}
+function rdNav(){const d=rdDate(),t0=lds(new Date()),isT=!RDs||RDs===t0,tm=new Date();tm.setDate(tm.getDate()+1);const lb=isT?"Today":RDs===lds(tm)?"Tomorrow":"";return `<span class="rdn"><button data-rd="-1" aria-label="${T("Previous day")}">‹</button> <b>${d.toLocaleDateString(loc(),{weekday:"short",day:"numeric",month:"short",year:"numeric"})}</b>${lb?" ("+T(lb)+")":""}${wxIsoShort(RDs||lds(new Date()))?` <span class="wxs">${wxIsoShort(RDs||lds(new Date()))}</span>`:""} <button data-rd="1" aria-label="${T("Next day")}">›</button> <button data-rd="0">${T("Today")}</button></span>`}
 const cur=()=>({name:$("#city").value,lat:+$("#lat").value,lon:+$("#lon").value,tz:$("#tz").value.trim()});
 function moon(ph,r,flip){const c=Math.cos(ph*Math.PI/180),rx=Math.abs(c)*r,w=ph<180,sw=w?(ph<90?0:1):(ph>270?1:0);
 return `<svg viewBox="0 0 ${2*r} ${2*r}" width="${2*r}" height="${2*r}" role="img" aria-label="Moon ${Math.round((1-c)*50)}% lit, ${w?"waxing":"waning"}"${flip?' style="transform:scaleX(-1)"':""}><circle cx="${r}" cy="${r}" r="${r}" fill="var(--dk)"/><path d="M${r} 0A${r} ${r} 0 0 ${w?1:0} ${r} ${2*r}A${rx} ${r} 0 0 ${sw} ${r} 0Z" fill="var(--lit)"/></svg>`}
@@ -210,12 +209,28 @@ const tname=t=>{const q=TRL&&TRL.t;return q?(t===15?q[14]:t===30?q[15]:q[(t-1)%1
 const pk=t=>TRL&&TRL.p?TRL.p[t<=15?0:1]:(t<=15?"Shukla (waxing)":"Krishna (waning)");
 const ml=(x,t)=>(x.adh?(TRL&&TRL.a?TRL.a+" ":"Adhika "):"")+((TRL&&TRL.m)||MONTHS)[pm==="p"&&t>15?(x.i+1)%12:x.i];
 const dstr=(c,o)=>new Date(c).toLocaleDateString(loc(),Object.assign({timeZone:"UTC"},o));
+
+// ---- weather (Open-Meteo, no key) ----
+let WX={},WXK="",WXBUSY=false;
+const WXC=c=>c===0?["☀️","Clear sky"]:c===1?["🌤️","Mostly clear"]:c===2?["⛅","Partly cloudy"]:c===3?["☁️","Cloudy"]:c===45||c===48?["🌫️","Fog"]:c>=51&&c<=57?["🌦️","Drizzle"]:c===61||c===80?["🌦️","Light rain"]:c===63||c===81?["🌧️","Rain"]:c===65||c===82||c===66||c===67?["🌧️","Heavy rain"]:c>=71&&c<=77||c===85||c===86?["🌨️","Snow"]:c===95?["⛈️","Thunderstorm"]:c===96||c===99?["⛈️","Thunderstorm with hail"]:["🌡️","Weather"];
+const isoC=c=>new Date(c).toISOString().slice(0,10);
+const wxIsoShort=k=>{const w=WX[k];return w?WXC(w.c)[0]+" "+Math.round(w.lo)+"–"+Math.round(w.hi)+"°C":""};
+const wxShort=c=>wxIsoShort(isoC(c));
+const wxCell=c=>{const w=WX[isoC(c)];return w?`<span class="wx" title="${WXC(w.c)[1]}, ${Math.round(w.lo)}–${Math.round(w.hi)}°C" aria-hidden="true">${WXC(w.c)[0]}</span>`:""};
+const wxRow=c=>{const w=WX[isoC(c)];if(!w)return "";return `<dt>${T("Weather")}</dt><dd>${WXC(w.c)[0]} ${WXC(w.c)[1]} · ${Math.round(w.lo)}°–${Math.round(w.hi)}°C${w.pp!=null?" · "+w.pp+"% chance of rain":""}</dd>`};
+async function wxEnsure(){try{const l=cur();if(!isFinite(l.lat)||!isFinite(l.lon)||(!l.lat&&!l.lon))return;const k=l.lat.toFixed(2)+","+l.lon.toFixed(2);if(k===WXK||WXBUSY)return;
+let ch=null;try{ch=JSON.parse(localStorage.getItem("kalandr-wx"))}catch(_){}
+if(ch&&ch.k===k&&Date.now()-ch.t<108e5){WX=ch.d;WXK=k;return true}
+WXBUSY=true;const u="https://api.open-meteo.com/v1/forecast?latitude="+l.lat+"&longitude="+l.lon+"&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&past_days=7&forecast_days=16&timezone=auto";
+const j=await (await fetch(u)).json(),d={};(j.daily&&j.daily.time||[]).forEach((t,i)=>{d[t]={c:j.daily.weather_code[i],hi:j.daily.temperature_2m_max[i],lo:j.daily.temperature_2m_min[i],pp:j.daily.precipitation_probability_max[i]}});
+WX=d;WXK=k;try{localStorage.setItem("kalandr-wx",JSON.stringify({k,t:Date.now(),d}))}catch(_){}WXBUSY=false;return true}catch(e){WXBUSY=false}}
+{const r0=render;render=function(){r0();if(!WXK||WXK!==(()=>{try{const l=cur();return l.lat.toFixed(2)+","+l.lon.toFixed(2)}catch(_){return ""}})())wxEnsure().then(ok=>{if(ok){r0();try{if(sel)detail(sel);renderMe()}catch(_){}}})}}
 function render(){const msg=$("#msg");msg.textContent="";
 try{L=cur();if(isNaN(L.lat)||isNaN(L.lon))throw Error("Enter latitude and longitude.");
 const first=Date.UTC(y,mo,1),n=new Date(Date.UTC(y,mo+1,0)).getUTCDate(),wd=new Date(first).getUTCDay(),flip=L.lat<0,ms=new Set(),vr=[],fl=[];
 let h=[0,1,2,3,4,5,6].map(i=>new Date(Date.UTC(2023,0,1+i)).toLocaleDateString(loc(),{weekday:"short",timeZone:"UTC"})).map(x=>`<div class="dh">${x}</div>`).join("")+'<div class="cell e"></div>'.repeat(wd);
 for(let i=0;i<n;i++){const c=first+i*D,d=day(L,c),t=tithi(d.sr),f0=fest(L,c),f=f0.filter(z=>!VN.has(z)),X=mon(d.sr),r=itemsOn(c,t,X);ms.add(ml(X,t));const vv=f0.filter(z=>VN.has(z));if(vv.length)vr.push([c,vv]);
-h+=`<button class="cell${f.length?" f":""}${c===sel?" sel":""}" data-c="${c}"><span class="top"><b>${i+1}</b>${moon(phase(d.sr),11,flip)}</span><small>${t===15||t===30?tname(t):((TRL&&TRL.s)?TRL.s[t<15?0:1]:(t<15?"Sh":"Kr"))+" "+t%15}</small>${f.map(x=>`<i>${fn(x)}</i>`).join("")}${cyMark(c)}${r.map(x=>`<i class="rm">${ico(x)} ${isB(x)?"":x.time+" "}${esc(x.title)}</i>`).join("")}<span class="dots">${f.some(z=>!JS.has(z))?"<span></span>":""}${vv.length?'<span class="v"></span>':""}${f.some(z=>JS.has(z))?'<span class="j"></span>':""}${r.length?'<span class="r"></span>':""}${cyMark(c)?'<span class="c"></span>':""}</span></button>`;if(f.length)fl.push([c,f])}
+h+=`<button class="cell${f.length?" f":""}${c===sel?" sel":""}" data-c="${c}"><span class="top"><b>${i+1}</b>${moon(phase(d.sr),11,flip)}</span><small>${t===15||t===30?tname(t):((TRL&&TRL.s)?TRL.s[t<15?0:1]:(t<15?"Sh":"Kr"))+" "+t%15}</small>${f.map(x=>`<i>${fn(x)}</i>`).join("")}${cyMark(c)}${r.map(x=>`<i class="rm">${ico(x)} ${isB(x)?"":x.time+" "}${esc(x.title)}</i>`).join("")}${wxCell(c)}<span class="dots">${f.some(z=>!JS.has(z))?"<span></span>":""}${vv.length?'<span class="v"></span>':""}${f.some(z=>JS.has(z))?'<span class="j"></span>':""}${r.length?'<span class="r"></span>':""}${cyMark(c)?'<span class="c"></span>':""}</span></button>`;if(f.length)fl.push([c,f])}
 $("#grid").innerHTML=h+'<div class="leg" style="grid-column:1/-1"><span></span>Festival<span class="v"></span>Vrat<span class="j"></span>Jain<span class="r"></span>Reminder<span class="c"></span>Cycle</div>';$("#fl").innerHTML=fl.map(([c,ns])=>`<li><span><b>${dstr(c,{weekday:"short",day:"numeric",month:"short"})}</b> ${ns.map(fn).join(", ")}</span></li>`).join("")||"<li>No festivals found this month.</li>";$("#vl").innerHTML=vr.map(([c,ns])=>`<li><span><b>${dstr(c,{weekday:"short",day:"numeric",month:"short"})}</b> ${ns.map(fn).join(", ")}${ns.includes("Sankashti Chaturthi")?" · moonrise "+tmf(day(L,c).mr):""}</span></li>`).join("")||"<li>No vrat days found this month.</li>";renderEc();try{renderEV()}catch(e){}$("#mt").innerHTML=dstr(first,{month:"long",year:"numeric"})+`<small>Hindu months: ${[...ms].join(", ")} · ${esc(L.name)}</small>`;
 if(sel&&sel>=first&&sel<first+n*D)detail(sel)}
 catch(e){msg.textContent=e.message.includes("time zone")||e.name==="RangeError"?"Unknown timezone. Use a name such as Asia/Kolkata.":e.message}}
@@ -229,8 +244,8 @@ const st=`${dstr(c,{weekday:"long",day:"numeric",month:"long",year:"numeric"})},
 document.querySelectorAll(".cell.sel").forEach(e=>e.classList.remove("sel"));const b=document.querySelector(`.cell[data-c="${c}"]`);if(b)b.classList.add("sel");
 let det=$("#det");if(!det){det=document.createElement("div");det.id="det";$("#grid").append(det)}
 const cells=[...document.querySelectorAll("#grid .cell")],k=cells.indexOf(b);if(k>=0)cells[Math.min(cells.length-1,k-k%7+6)].after(det);
-det.innerHTML=`<div class="dg">${moon(ph,34,L.lat<0)}<div><h3>${dstr(c,{weekday:"long",day:"numeric",month:"long",year:"numeric"})}</h3><span style="color:var(--mu)">${L.name} · ${Math.round((1-Math.cos(ph*Math.PI/180))*50)}% lit</span></div><button data-close style="margin-left:auto" aria-label="Close day details">${T("Close")}</button></div>
-<dl><dt>${T("Tithi at sunrise")}</dt><dd>${pk(t).split(" ")[0]} ${tname(t)} · ${T("Tithi ends")} ${te}</dd><dt>${T("Paksha")}</dt><dd>${pk(t)}</dd><dt>${T("Hindu month")}</dt><dd>${ml(x,t)}</dd><dt>${T("Nakshatra")}</dt><dd>${nk}</dd>
+det.innerHTML=`<div class="dg">${moon(ph,34,L.lat<0)}<div><h3>${dstr(c,{weekday:"long",day:"numeric",month:"long",year:"numeric"})}</h3><span style="color:var(--mu)">${L.name} · ${Math.round((1-Math.cos(ph*Math.PI/180))*50)}% lit${WX[isoC(c)]?" · "+WXC(WX[isoC(c)].c)[0]:""}</span></div><button data-close style="margin-left:auto" aria-label="Close day details">${T("Close")}</button></div>
+<dl>${wxRow(c)}<dt>${T("Tithi at sunrise")}</dt><dd>${pk(t).split(" ")[0]} ${tname(t)} · ${T("Tithi ends")} ${te}</dd><dt>${T("Paksha")}</dt><dd>${pk(t)}</dd><dt>${T("Hindu month")}</dt><dd>${ml(x,t)}</dd><dt>${T("Nakshatra")}</dt><dd>${nk}</dd>
 <dt>${T("Sunrise / sunset")}</dt><dd>${tmf(d.sr)} / ${tmf(d.ss)}</dd><dt>${T("Moonrise / moonset")}</dt><dd>${tmf(d.mr)} / ${tmf(d.ms)}</dd>
 <dt>${T("Rahu Kaal")}</dt><dd>${sgm([8,2,7,5,6,4,3][wd])}</dd><dt>${T("Yamaganda")}</dt><dd>${sgm([5,4,3,2,1,7,6][wd])}</dd><dt>${T("Gulika")}</dt><dd>${sgm([7,6,5,4,3,2,1][wd])}</dd><dt>${T("Abhijit Muhurat")}</dt><dd>${wd===3?"Not counted on Wednesday":rg(d.sr+7*dl/15,d.sr+8*dl/15)}</dd></dl>
 <p style="margin:10px 0 2px"><b>${T("Choghadiya, day")}</b></p>${r8.map(i=>chip(CH[(DS+i)%7],d.sr+i*u,d.sr+(i+1)*u)).join("")}
@@ -521,11 +536,14 @@ const isF=()=>!!(ME&&ME.gender==="F"&&!ME.skip),cyd=iso=>Date.UTC(+iso.slice(0,4
 function cyCalc(){if(!isF()||!ME.cy)return null;const cy=ME.cy,st=[...new Set((cy.logs||[]).filter(Boolean))].sort();if(!st.length)return null;const ms=st.map(cyd);let L=Math.min(60,Math.max(15,+cy.cycle||28)),av=0;
 const iv=[];for(let i=1;i<ms.length;i++){const d=Math.round((ms[i]-ms[i-1])/D);if(d>=15&&d<=60)iv.push(d)}
 if(cy.useAvg!==false&&iv.length>=2){const l=iv.slice(-6);av=Math.round(l.reduce((a,b)=>a+b,0)/l.length);L=av}
-return{st,ms,L,P:Math.min(10,Math.max(1,+cy.period||5)),av,last:ms[ms.length-1]}}
-function cyType(c,k){if(!k)return"";const{ms,L,P,last}=k;for(const s of ms)if(c>=s&&c<s+P*D)return"p";
+const rl=iv.slice(-6),lo=rl.length>=2?Math.min(...rl):L-2,hi=rl.length>=2?Math.max(...rl):L+2,irr=rl.length>=2&&hi-lo>7;
+return{st,ms,L,P:Math.min(10,Math.max(1,+cy.period||5)),av,last:ms[ms.length-1],lo:Math.max(15,Math.min(lo,L)),hi:Math.min(60,Math.max(hi,L)),irr,n:iv.length}}
+function cyType(c,k){if(!k)return"";const{ms,L,P,last,lo,hi}=k;for(const s of ms)if(c>=s&&c<s+P*D)return"p";const td=cyd(lds(new Date())),due=last+L*D;
+if(td>due&&c>=due&&c<=td)return"l";
 for(let i=1;i<=12;i++){const s=last+i*L*D;if(c>=s&&c<s+P*D)return"e"}
+if(c>=Math.max(td,last+lo*D)&&c<=last+hi*D)return"w";
 for(let i=0;i<=12;i++){const ov=last+(i*L+L-14)*D;if(c===ov)return"o";if(c>=ov-5*D&&c<=ov+D)return"f"}return""}
-function cyMark(c){try{if(!isF()||!ME.cy||ME.cy.cal===false)return"";const t=cyType(c,cyCalc());return t?`<i class="cy cy-${t}">${{p:"● Period",e:"○ Period due",f:"✿ Fertile",o:"✿ Ovulation"}[t]}</i>`:""}catch(e){return""}}
+function cyMark(c){try{if(!isF()||!ME.cy||ME.cy.cal===false)return"";const t=cyType(c,cyCalc());return t?`<i class="cy cy-${t}">${{p:"● Period",e:"○ Period due",w:"◌ May start",l:"○ Late",f:"✿ Fertile",o:"✿ Ovulation"}[t]}</i>`:""}catch(e){return""}}
 function renderCY(){const box=$("#cy");if(!box)return;if(!isF()){box.hidden=true;box.innerHTML="";return}
 box.hidden=(ST.hide||[]).includes("cy");
 const cy=ME.cy||{},k=cyCalc(),fmt=c=>dstr(c,{weekday:"short",day:"numeric",month:"short"}),td=cyd(lds(new Date()));
@@ -537,18 +555,20 @@ if(day<=k.P)ph=`Period, day ${day}`;else if(day>k.L)ph=late?`Period is ${late} d
 const dn=Math.round((nx-td)/D);
 h+=`<p style="margin:4px 0"><b style="font-size:1.1rem">${ph}</b>${day<=k.L?` · cycle day ${day} of ${k.L}`:""}</p>
 <dl style="display:grid;grid-template-columns:auto 1fr;gap:2px 14px;margin:6px 0"><dt style="color:var(--mu)">Next period</dt><dd style="margin:0">${late?"Expected "+fmt(k.last+k.L*D)+" ("+late+" day"+(late>1?"s":"")+" ago)":fmt(nx)+" (in "+dn+" day"+(dn===1?"":"s")+")"}</dd>
+${!late&&k.hi>k.lo?`<dt style="color:var(--mu)">Could start</dt><dd style="margin:0">${fmt(k.last+k.lo*D)} – ${fmt(k.last+k.hi*D)} (${k.n>=2?"your own range: "+k.lo+" to "+k.hi+" day cycles":"a few days either way is normal"})</dd>`:""}
 <dt style="color:var(--mu)">Fertile window</dt><dd style="margin:0">${fmt(fw[0])} – ${fmt(fw[1])}, ovulation about ${fmt(ov)}</dd>
 <dt style="color:var(--mu)">Cycle used</dt><dd style="margin:0">${k.L} days${k.av?" (average of your logged periods)":""}, period ${k.P} days</dd></dl>
+${cy.msg?`<p style="margin:6px 0"><b>${cy.msg}</b></p>`:""}${k.irr?`<p class="note" style="margin:6px 0">Your cycles vary from ${k.lo} to ${k.hi} days, so treat these dates as a range, not an exact day.</p>`:""}${late?`<p style="margin:6px 0">${late<=3?"A few days either way is common. Dates shift with stress, travel, illness and sleep.":late<=7?"Delays like this can follow stress, travel, illness, a change in routine or weight. If a pregnancy is possible, a home test is a good next step.":"Your period is more than a week late. If a pregnancy is possible, take a test. If it keeps being late or you are worried, please talk to a doctor."}</p><div class="bar" style="border:0;padding:0;background:none"><button data-cy="today">It started today</button></div>`:!late&&dn<=2?`<div class="bar" style="border:0;padding:0;background:none"><button data-cy="today">It started today</button></div>`:""}
 <div class="bar" style="border:0;padding:6px 0 0;background:none"><label>Log a period start<input id="cyn" type="date" value="${lds(new Date())}" max="${lds(new Date())}"></label><button data-cy="log">Log period started</button></div>
 <div class="bar" style="border:0;padding:6px 0 0;background:none"><label>Cycle length<input id="cyc" type="number" min="15" max="60" value="${cy.cycle||28}" style="width:90px"></label><label>Period length<input id="cyp" type="number" min="1" max="10" value="${cy.period||5}" style="width:90px"></label>
 <label style="flex-direction:row;align-items:center;gap:6px"><input type="checkbox" id="cya"${cy.useAvg===false?"":" checked"}> Use my logged average (after 3 periods)</label><label style="flex-direction:row;align-items:center;gap:6px"><input type="checkbox" id="cyk"${cy.cal===false?"":" checked"}> Show on calendar</label><button data-cy="set">Save settings</button></div>
 <details><summary>Logged periods</summary><ul class="ql">${k.st.slice().reverse().slice(0,12).map(d=>`<li><span>${fmt(cyd(d))}</span><button data-cy="del" data-d="${d}">Delete</button></li>`).join("")}</ul></details>
 <p class="note" style="margin:6px 0 0">Predictions get better as you log more periods. Irregular cycles, stress, travel or medicines can shift dates. See a doctor for very long, very short, painful or missed periods.</p><span id="cym" class="note"></span> <button data-cy="clear">Clear cycle data</button>`}
 box.innerHTML=h}
-document.addEventListener("click",e=>{const b=e.target.closest("[data-cy]");if(!b||!isF())return;const a=b.dataset.cy,m=t=>{const x=$("#cym");if(x)x.textContent=t};ME.cy=ME.cy||{logs:[]};const cy=ME.cy;
+document.addEventListener("click",e=>{const b=e.target.closest("[data-cy]");if(!b||!isF())return;const a=b.dataset.cy,m=t=>{const x=$("#cym");if(x)x.textContent=t};ME.cy=ME.cy||{logs:[]};const cy=ME.cy;if(a!=="log"&&a!=="today")delete cy.msg;
 const num=(id,lo,hi,df)=>{const v=+($(id)&&$(id).value);return v>=lo&&v<=hi?Math.round(v):df};
 if(a==="start"){const d=$("#cyl").value;if(!d){m("Pick the first day of your last period.");return}cy.logs=[d];cy.cycle=num("#cyc",15,60,28);cy.period=num("#cyp",1,10,5)}
-else if(a==="log"){const d=$("#cyn").value;if(!d){m("Pick a date.");return}if(!(cy.logs||[]).includes(d))cy.logs=[...(cy.logs||[]),d].sort()}
+else if(a==="log"||a==="today"){const d=a==="today"?lds(new Date()):$("#cyn").value;if(!d){m("Pick a date.");return}if(!(cy.logs||[]).includes(d)){const k0=cyCalc();if(k0){const df=Math.round((cyd(d)-(k0.last+k0.L*D))/D);cy.msg=df===0?"Logged. Right on time, as predicted.":df<0?"Logged. It started "+(-df)+" day"+(df===-1?"":"s")+" earlier than predicted. Your next dates are updated.":"Logged. It started "+df+" day"+(df===1?"":"s")+" later than predicted. Your next dates are updated."}cy.logs=[...(cy.logs||[]),d].sort()}}
 else if(a==="set"){cy.cycle=num("#cyc",15,60,28);cy.period=num("#cyp",1,10,5);cy.useAvg=$("#cya").checked;cy.cal=$("#cyk").checked}
 else if(a==="del"){cy.logs=(cy.logs||[]).filter(x=>x!==b.dataset.d)}
 else if(a==="clear"){if(!confirm("Delete all your cycle data from this device?"))return;delete ME.cy}
@@ -653,11 +673,13 @@ $("#shc").onclick=()=>{ST.hide=SECS.map(x=>x[0]);ST.calOnly=true;saveST();applyS
 buildSecs();initGm();renderEV();if(!$("#nw").hidden)loadNews();
 $("#sth").onchange=e=>{ST.theme=e.target.value;saveST();applyTheme(true)};
 const jainSaved=()=>!!(ST.jain&&ST.jainS);
-function jainUI(){const sv=jainSaved();$("#jb").hidden=sv;$("#jrw").hidden=!sv;$("#jon").checked=!!ST.jain;$("#jq").hidden=!(ST.jain&&!ST.jainS);if(ST.jain&&!ST.jainS)$("#jsc").value=""}
-function jainApply(){saveST();rc.clear();applyJInfo();jainUI();try{render()}catch(e){}}
-$("#jon").onchange=e=>{ST.jain=e.target.checked;if(!ST.jain)delete ST.jainS;$("#jmsg").textContent="";jainApply()};
-$("#jsv").onclick=()=>{const v=$("#jsc").value;if(!v){$("#jmsg").textContent="Please choose one option first.";return}ST.jain=true;ST.jainS=v;$("#jmsg").textContent="";jainApply()};
-$("#jrs").onclick=()=>{ST.jain=false;delete ST.jainS;jainApply();try{$("#jb").scrollIntoView({block:"center"})}catch(e){}};
+const jbHtml=()=>'<div id="jb" class="jbx"><label class="jl"><input type="checkbox" id="jon"> <span><b>I follow Jain festivals</b>: add Jain festivals and important dates to my calendar</span></label><div id="jq" hidden><label>Which tradition do you follow? <select id="jsc"><option value="">Choose...</option><option value="s">Shvetambar</option><option value="d">Digambar</option><option value="b">Not sure, show all</option></select></label> <button type="button" id="jsv">Save</button> <span id="jmsg" class="note"></span></div></div>';
+function jainUI(){const sv=jainSaved(),g=x=>document.getElementById(x);if(g("jrw"))g("jrw").hidden=!sv;if(g("jon")){g("jon").checked=!!ST.jain;g("jq").hidden=!(ST.jain&&!ST.jainS);if(ST.jain&&!ST.jainS&&g("jsc")&&!g("jsc").dataset.k)g("jsc").value=""}}
+function jainApply(){saveST();rc.clear();applyJInfo();try{renderMe()}catch(e){}jainUI();try{render()}catch(e){}}
+{const rm0=renderMe;renderMe=function(){rm0();const box=document.getElementById("me");if(!box)return;const old=box.querySelector("#jb");if(old)old.remove();if(jainSaved())return;const f=box.querySelector('button[data-me="save"]');if(f&&f.parentElement)f.parentElement.insertAdjacentHTML("beforeend",jbHtml().replace('<div id="jb" class="jbx">','<div id="jb" class="jbx" style="flex-basis:100%;order:-1">'));else box.insertAdjacentHTML("beforeend",jbHtml());jainUI()}}
+document.addEventListener("change",e=>{if(e.target.id==="jon"){ST.jain=e.target.checked;if(!ST.jain)delete ST.jainS;saveST();jainUI()}});
+document.addEventListener("click",e=>{const t=e.target;if(t.id==="jsv"){const v=document.getElementById("jsc").value;if(!v){document.getElementById("jmsg").textContent="Please choose one option first.";return}ST.jain=true;ST.jainS=v;jainApply()}
+else if(t.id==="jrs"){ST.jain=false;delete ST.jainS;jainApply();try{document.querySelector('#tb button[data-tab="me"]').click()}catch(_){}}});
 applyJInfo();jainUI();
 $("#dim").oninput=e=>{ST.dim=+e.target.value;saveST();applyBg()};
 $("#bgx").onclick=()=>{bgData="";try{localStorage.removeItem("panchang-bg")}catch(e){}applyBg()};
