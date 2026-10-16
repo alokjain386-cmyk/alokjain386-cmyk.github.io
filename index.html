@@ -93,6 +93,9 @@ html.obo body>*:not(#onb):not(#lk){visibility:hidden!important}
 .obbub{position:absolute;right:-6px;bottom:-16px;background:#DCF8C6;color:#1c3a14;border-radius:14px 14px 2px 14px;padding:7px 12px;font-size:.85rem;animation:obin .6s 1s both;box-shadow:0 4px 12px rgba(0,0,0,.2)}
 .obw{width:100%;max-width:560px;margin:0 auto;padding:calc(20px + env(safe-area-inset-top,0px)) 16px 40px}.obw h2{font:400 1.7rem "Tiro Devanagari Hindi",Georgia,serif;color:var(--ac);margin:6px 0 0}.obstep{margin:0;color:var(--mu);font-size:.85rem}.obdots{display:flex;gap:6px;margin:6px 0 10px}.obdots i{width:28px;height:5px;border-radius:3px;background:var(--ln)}.obdots i.on{background:var(--ac)}.obg3{background:none;border:0;color:var(--mu);text-decoration:underline}
 @media(prefers-reduced-motion:reduce){.obsl h2,.obsl p,.obn,.obchips span,.obic span,.obc,.obcard,.obbub{animation:none!important}}
+
+.upg{display:flex;gap:8px;flex-wrap:wrap}.upo{flex:1 1 150px;display:flex;flex-direction:row!important;align-items:flex-start;gap:8px;border:1px solid var(--ln);border-radius:12px;padding:10px;background:var(--cd,#fff)}.upo em{font-style:normal;color:#0e8a7d;font-size:.8rem}.upl{margin:2px 0 0;padding-left:20px}
+#upd{position:fixed;inset:0;z-index:9400;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:16px}.upb{background:var(--bg);color:var(--fg);border-radius:16px;padding:18px;max-width:380px;width:100%}.upb h3{margin:0 0 6px;color:var(--ac)}
 </style></head><body><svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="kl" viewBox="0 0 512 512"><defs><linearGradient id="klg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFAE4D"/><stop offset="1" stop-color="#D4540A"/></linearGradient>
 <mask id="klm"><rect width="512" height="512" fill="#fff"/><circle cx="296" cy="232" r="84" fill="#000"/></mask></defs>
 <rect width="512" height="512" rx="116" fill="url(#klg)"/>
@@ -135,10 +138,10 @@ html.obo body>*:not(#onb):not(#lk){visibility:hidden!important}
 <p class="note" style="margin:6px 0 0">Works on your own website and on you and up to 100 test users. It does not work inside the Claude preview. Google requires a paid security review before the Gmail permission can be used by the general public.</p></details></details></section>
 <section class="cm" id="rm"><h3 data-t="Reminders & alarms">Reminders &amp; alarms</h3>
 <div class="bar" style="border:0;padding:8px 0 0;background:none">
-<label>Type<select id="rt"><option value="bday">Birthday</option><option value="anniv">Anniversary / remembrance</option><option value="task">Task</option><option value="alarm">Alarm</option></select></label>
+<label>Type<select id="rt"><option value="bday">Birthday</option><option value="anniv">Anniversary / remembrance</option><option value="task">Task</option><option value="note">Note to remember</option><option value="alarm">Alarm</option></select></label>
 <label>Title<input id="rtl" placeholder="Name or task" style="width:180px"></label>
 <label id="rdw">Date<input id="rd" type="date"></label>
-<label>Time<input id="rtm" type="time" value="09:00"></label>
+<label id="rtmw">Time<input id="rtm" type="time" value="09:00"></label><label id="rcw" hidden>Category<select id="rc"><option>Family</option><option>Home</option><option>Work</option><option>Health</option><option>Money</option><option>Travel</option><option>Friends</option><option>Other</option></select></label><label id="ryw" hidden style="flex-direction:row;align-items:center;gap:6px"><input id="ry" type="checkbox"> Remember every year</label>
 <label id="rrw">Repeat<select id="rr"><option value="once">Once</option><option value="daily">Every day</option></select></label>
 <label id="rhw" style="flex-direction:row;align-items:center;gap:6px"><input id="rh" type="checkbox"> Also on the Hindu date (same tithi each year)</label>
 <button id="ra">Add</button></div>
@@ -383,7 +386,7 @@ try{L=cur();if(isNaN(L.lat)||isNaN(L.lon))throw Error("Enter latitude and longit
 const first=Date.UTC(y,mo,1),n=new Date(Date.UTC(y,mo+1,0)).getUTCDate(),wd=new Date(first).getUTCDay(),flip=L.lat<0,ms=new Set(),vr=[],fl=[];
 let h=[0,1,2,3,4,5,6].map(i=>new Date(Date.UTC(2023,0,1+i)).toLocaleDateString(loc(),{weekday:"short",timeZone:"UTC"})).map(x=>`<div class="dh">${x}</div>`).join("")+'<div class="cell e"></div>'.repeat(wd);
 for(let i=0;i<n;i++){const c=first+i*D,d=day(L,c),t=tithi(d.sr),f0=fest(L,c),f=f0.filter(z=>!VN.has(z)),X=mon(d.sr),r=itemsOn(c,t,X);ms.add(ml(X,t));const vv=f0.filter(z=>VN.has(z));if(vv.length)vr.push([c,vv]);
-h+=`<button class="cell${f.length?" f":""}${f.some(z=>LK[z]==="reg"||LK[z]==="com")?" lc":""}${c===sel?" sel":""}" data-c="${c}"><span class="top"><b>${i+1}</b>${moon(phase(d.sr),11,flip)}</span><small>${t===15||t===30?tname(t):((TRL&&TRL.s)?TRL.s[t<15?0:1]:(t<15?"Sh":"Kr"))+" "+t%15}</small>${f.map(x=>`<i>${fn(x)}</i>`).join("")}${cyMark(c)}${r.map(x=>`<i class="rm">${ico(x)} ${isB(x)?"":x.time+" "}${esc(x.title)}</i>`).join("")}${wxCell(c)}<span class="dots">${f.some(z=>!JS.has(z))?"<span></span>":""}${vv.length?'<span class="v"></span>':""}${f.some(z=>JS.has(z))?'<span class="j"></span>':""}${f.some(z=>LK[z])?'<span class="l"></span>':""}${r.length?'<span class="r"></span>':""}${cyMark(c)?'<span class="c"></span>':""}</span></button>`;if(f.length)fl.push([c,f])}
+h+=`<button class="cell${f.length?" f":""}${f.some(z=>LK[z]==="reg"||LK[z]==="com")?" lc":""}${c===sel?" sel":""}" data-c="${c}"><span class="top"><b>${i+1}</b>${moon(phase(d.sr),11,flip)}</span><small>${t===15||t===30?tname(t):((TRL&&TRL.s)?TRL.s[t<15?0:1]:(t<15?"Sh":"Kr"))+" "+t%15}</small>${f.map(x=>`<i>${fn(x)}</i>`).join("")}${cyMark(c)}${r.map(x=>`<i class="rm">${ico(x)} ${noT(x)?"":x.time+" "}${esc(x.title)}</i>`).join("")}${wxCell(c)}<span class="dots">${f.some(z=>!JS.has(z))?"<span></span>":""}${vv.length?'<span class="v"></span>':""}${f.some(z=>JS.has(z))?'<span class="j"></span>':""}${f.some(z=>LK[z])?'<span class="l"></span>':""}${r.length?'<span class="r"></span>':""}${cyMark(c)?'<span class="c"></span>':""}</span></button>`;if(f.length)fl.push([c,f])}
 $("#grid").innerHTML=h+'<div class="leg" style="grid-column:1/-1"><span></span>Festival<span class="v"></span>Vrat'+(jainOn()?'<span class="j"></span>Jain':'')+(regProf().any?'<span class="l"></span>Local':'')+'<span class="r"></span>Reminder'+((isF()&&ME.cy&&ME.cy.cal!==false)?'<span class="c"></span>Cycle':'')+'</div>';$("#fl").innerHTML=fl.map(([c,ns])=>`<li><span><b>${dstr(c,{weekday:"short",day:"numeric",month:"short"})}</b> ${ns.map(fn).join(", ")}</span></li>`).join("")||"<li>No festivals found this month.</li>";$("#vl").innerHTML=vr.map(([c,ns])=>`<li><span><b>${dstr(c,{weekday:"short",day:"numeric",month:"short"})}</b> ${ns.map(fn).join(", ")}${ns.includes("Sankashti Chaturthi")?" · moonrise "+tmf(day(L,c).mr):""}</span></li>`).join("")||"<li>No vrat days found this month.</li>";renderEc();try{renderEV()}catch(e){}$("#mt").innerHTML=dstr(first,{month:"long",year:"numeric"})+`<small>Hindu months: ${[...ms].join(", ")} · ${esc(L.name)}</small>`;
 if(sel&&sel>=first&&sel<first+n*D)detail(sel)}
 catch(e){msg.textContent=e.message.includes("time zone")||e.name==="RangeError"?"Unknown timezone. Use a name such as Asia/Kolkata.":e.message}}
@@ -404,9 +407,9 @@ det.innerHTML=`<div class="dg">${moon(ph,34,L.lat<0)}<div><h3>${dstr(c,{weekday:
 <p style="margin:10px 0 2px"><b>${T("Choghadiya, day")}</b></p>${r8.map(i=>chip(CH[(DS+i)%7],d.sr+i*u,d.sr+(i+1)*u)).join("")}
 <p style="margin:8px 0 2px"><b>${T("Choghadiya, night")}</b></p>${r8.map(i=>chip(CH[((NS-2*i)%7+7)%7],d.ss+i*nu,d.ss+(i+1)*nu)).join("")}
 ${f.map(z=>`<details><summary>${fn(z)}</summary><p>${lt(z,INFO[z]||"")}${/Ekadashi/.test(z)&&pr?" Parana (break the fast) on "+dstr(c+D,{day:"numeric",month:"short"})+": "+pr+".":""}</p></details>`).join("")}
-<ul class="ql">${its.map(i=>`<li><span>${ico(i)} ${isB(i)?"":i.time+" "}${esc(i.title)}${i.type==="alarm"&&i.rep==="daily"?" (every day)":""}</span><button data-q="${i.id}" aria-label="Delete ${esc(i.title)}">Delete</button></li>`).join("")}</ul>
-<div class="bar" style="border:0;padding:8px 0 0;background:none"><label>Add to this day<select id="qt"><option value="task">Task</option><option value="bday">Birthday</option><option value="anniv">Anniversary / remembrance</option><option value="alarm">Alarm</option></select></label>
-<label>Title<input id="qtl" style="width:160px"></label><label>Time<input id="qtm" type="time" value="09:00"></label>
+<ul class="ql">${its.map(i=>`<li><span>${ico(i)} ${noT(i)?"":i.time+" "}${esc(i.title)}${i.cat?` <small>(${esc(i.cat)})</small>`:""}${i.type==="alarm"&&i.rep==="daily"?" (every day)":""}</span><button data-q="${i.id}" aria-label="Delete ${esc(i.title)}">Delete</button></li>`).join("")}</ul>
+<div class="bar" style="border:0;padding:8px 0 0;background:none"><label>Add to this day<select id="qt"><option value="task">Task</option><option value="note">Note to remember</option><option value="bday">Birthday</option><option value="anniv">Anniversary / remembrance</option><option value="alarm">Alarm</option></select></label>
+<label>Title<input id="qtl" style="width:160px"></label><label id="qtmw">Time<input id="qtm" type="time" value="09:00"></label><label id="qcw" hidden>Category<select id="qc">${NCATS.map(c=>`<option>${c}</option>`).join("")}</select></label><label id="qyw" hidden style="flex-direction:row;align-items:center;gap:6px"><input id="qy" type="checkbox"> Every year</label>
 <label id="qrw" hidden>Repeat<select id="qr"><option value="once">Once</option><option value="daily">Every day</option></select></label>
 <label id="qhw" hidden style="flex-direction:row;align-items:center;gap:6px"><input id="qh" type="checkbox"> Also on the Hindu date</label><button id="qa">${T("Add")}</button></div><span id="qmsg" class="note"></span>
 <p style="margin:10px 0 0"><button data-share="img">📷 ${T("Share as picture")}</button> <button data-share="wa">${T("Share on WhatsApp")}</button> <button data-share="copy">${T("Copy all details")}</button></p></p>`;
@@ -423,15 +426,15 @@ let items=[];try{items=JSON.parse(localStorage.getItem("panchang-items")||"[]")}
 const save=()=>{try{localStorage.setItem("panchang-items",JSON.stringify(items))}catch(e){}};
 const pad=n=>String(n).padStart(2,"0"),lds=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const isB=it=>it.type==="bday"||it.type==="anniv",ico=it=>it.type==="bday"?"🎂":it.type==="anniv"?"🪔":it.type==="task"?"☑":"⏰";
+const isB=it=>it.type==="bday"||it.type==="anniv",ico=it=>it.type==="bday"?"🎂":it.type==="anniv"?"🪔":it.type==="task"?"☑":it.type==="note"?"📝":"⏰",noT=it=>isB(it)||it.type==="note",NCATS=["Family","Home","Work","Health","Money","Travel","Friends","Other"];
 function itemsOn(c,t,x){const ds=new Date(c).toISOString().slice(0,10);
-return items.filter(it=>!it.done&&(isB(it)?(it.date.slice(5)===ds.slice(5)||(it.hin&&!x.adh&&x.i===it.hin.m&&t===it.hin.t)):it.type==="task"?(it.rep==="monthly"?ds>=it.date&&ds.slice(8)===it.date.slice(8):it.date===ds):it.rep==="daily"?ds>=it.date:it.date===ds))}
-function renderList(){const w=it=>isB(it)?`${it.type==="bday"?"Birthday":"Anniversary"} ${it.date.slice(5)}${it.hin?" + Hindu tithi":""} at ${it.time}`:it.type==="task"?`${it.date} ${it.time}${it.rep==="monthly"?" (every month)":""}`:`${it.rep==="daily"?"Every day":it.date} ${it.time}${it.off?" (rang)":""}`;
+return items.filter(it=>!it.done&&(it.type==="note"?(it.rep==="yearly"?it.date.slice(5)===ds.slice(5)&&ds>=it.date:it.date===ds):isB(it)?(it.date.slice(5)===ds.slice(5)||(it.hin&&!x.adh&&x.i===it.hin.m&&t===it.hin.t)):it.type==="task"?(it.rep==="monthly"?ds>=it.date&&ds.slice(8)===it.date.slice(8):it.date===ds):it.rep==="daily"?ds>=it.date:it.date===ds))}
+function renderList(){const w=it=>it.type==="note"?`${it.cat||"Note"} · ${it.date}${it.rep==="yearly"?" (every year)":""}`:isB(it)?`${it.type==="bday"?"Birthday":"Anniversary"} ${it.date.slice(5)}${it.hin?" + Hindu tithi":""} at ${it.time}`:it.type==="task"?`${it.date} ${it.time}${it.rep==="monthly"?" (every month)":""}`:`${it.rep==="daily"?"Every day":it.date} ${it.time}${it.off?" (rang)":""}`;
 $("#rl").innerHTML=items.slice().sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time)).map(it=>`<li><label style="flex-direction:row;align-items:center;gap:6px;color:var(--fg);font-size:1rem">${it.type==="task"?`<input type="checkbox" data-d="${it.id}"${it.done?" checked":""}>`:""}${ico(it)} ${esc(it.title)}</label><span>${w(it)}</span><button data-x="${it.id}" aria-label="Delete ${esc(it.title)}">Delete</button></li>`).join("")||"<li>No reminders yet.</li>"}
-function syncForm(){const t=$("#rt").value;$("#rdw").hidden=t==="alarm";$("#rrw").hidden=t!=="alarm";$("#rhw").hidden=!(t==="bday"||t==="anniv")}
+function syncForm(){const t=$("#rt").value;{const n=t==="note";$("#rcw").hidden=!n;$("#ryw").hidden=!n;$("#rtmw").hidden=n}$("#rdw").hidden=t==="alarm";$("#rrw").hidden=t!=="alarm";$("#rhw").hidden=!(t==="bday"||t==="anniv")}
 function addItem(v){const m=t=>{$("#msg").textContent=t;const q=$("#qmsg");if(q)q.textContent=t};
 if(!v.title){m("Enter a title.");return}
-const it={id:String(Date.now()),type:v.type,title:v.title,time:v.time,date:"",rep:"once",hin:null,done:false};
+const it={id:String(Date.now()),type:v.type,title:v.title,time:v.time,date:"",rep:"once",hin:null,done:false};if(v.type==="note"){it.cat=v.cat||"Other";it.rep=v.yearly?"yearly":"once"}
 if(v.type==="alarm"){it.rep=v.rep||"once";if(v.date)it.date=v.date;else{const n=new Date(),t0=new Date(n.getFullYear(),n.getMonth(),n.getDate(),+v.time.slice(0,2),+v.time.slice(3,5));if(t0<=n)t0.setDate(t0.getDate()+1);it.date=lds(t0)}}
 else{if(!v.date){m("Pick a date.");return}it.date=v.date;
 if(isB(v)&&v.hindu){try{const d=day(cur(),Date.UTC(+v.date.slice(0,4),+v.date.slice(5,7)-1,+v.date.slice(8,10))),x=mon(d.sr);it.hin={m:x.i,t:tithi(d.sr)}}catch(e){m("Could not work out the Hindu birthday. Check the timezone.");return}}}
@@ -457,7 +460,7 @@ try{stopFn=sound(it.type==="alarm"?"alarm":"notif")}catch(e){}
 try{if(window.Notification&&Notification.permission==="granted")new Notification(it.title)}catch(e){}
 $("#snz").onclick=()=>{stopFn();$("#alert").hidden=true;setTimeout(()=>ring(it),3e5)};$("#dsm").onclick=()=>{stopFn();$("#alert").hidden=true}}
 function tick(){const now=Date.now(),n=new Date(now),ds=lds(n),civ=Date.UTC(n.getFullYear(),n.getMonth(),n.getDate());
-for(const it of items){if(it.done||it.off)continue;const s=new Date(ds+"T"+(it.time||"09:00")+":00").getTime();if(!(s>last&&s<=now))continue;
+for(const it of items){if(it.done||it.off||it.type==="note")continue;const s=new Date(ds+"T"+(it.time||"09:00")+":00").getTime();if(!(s>last&&s<=now))continue;
 let hit=false;
 if(it.type==="alarm")hit=it.rep==="daily"?ds>=it.date:it.date===ds;else if(it.type==="task")hit=it.rep==="monthly"?ds>=it.date&&ds.slice(8)===it.date.slice(8):it.date===ds;
 else{try{const d=day(L,civ);hit=itemsOn(civ,tithi(d.sr),mon(d.sr)).includes(it)}catch(e){}}
@@ -478,12 +481,12 @@ $("#grid").onclick=e=>{const b=e.target.closest(".cell[data-c]");if(e.target.clo
 const cp=e.target.closest("[data-copy]");if(cp){try{navigator.clipboard.writeText(cp.dataset.copy);cp.textContent="Copied"}catch(x){cp.textContent="Copy not allowed here"}return}
 if(b)return +b.dataset.c===sel?deselect():detail(+b.dataset.c,1);
 const q=e.target.closest("[data-q]");if(q){items=items.filter(i=>i.id!==q.dataset.q);save();renderList();render();return}
-if(e.target.id==="qa")addItem({type:$("#qt").value,title:$("#qtl").value.trim(),time:$("#qtm").value||"09:00",date:new Date(sel).toISOString().slice(0,10),rep:$("#qr").value,hindu:$("#qh").checked})};
-$("#grid").onchange=e=>{if(e.target.id==="qt"){const v=e.target.value;$("#qrw").hidden=v!=="alarm";$("#qhw").hidden=!(v==="bday"||v==="anniv")}};
+if(e.target.id==="qa")addItem({cat:$("#qc").value,yearly:$("#qy").checked,type:$("#qt").value,title:$("#qtl").value.trim(),time:$("#qtm").value||"09:00",date:new Date(sel).toISOString().slice(0,10),rep:$("#qr").value,hindu:$("#qh").checked})};
+$("#grid").onchange=e=>{if(e.target.id==="qt"){const v=e.target.value;$("#qcw").hidden=$("#qyw").hidden=v!=="note";$("#qtmw").hidden=v==="note";$("#qrw").hidden=v!=="alarm";$("#qhw").hidden=!(v==="bday"||v==="anniv")}};
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&sel&&$("#det")&&!e.target.closest("select"))deselect()});
 $("#grid").onkeydown=e=>{if(e.key==="Enter"&&e.target.id==="qtl")$("#qa").click()};
 $("#go").onclick=compare;
-$("#rt").onchange=syncForm;$("#ra").onclick=()=>{const t=$("#rt").value;addItem({type:t,title:$("#rtl").value.trim(),time:$("#rtm").value||"09:00",date:t==="alarm"?"":$("#rd").value,rep:$("#rr").value,hindu:$("#rh").checked})};$("#rd").value=lds(new Date());syncForm();renderList();setInterval(tick,10000);
+$("#rt").onchange=syncForm;$("#ra").onclick=()=>{const t=$("#rt").value;addItem({cat:$("#rc").value,yearly:$("#ry").checked,type:t,title:$("#rtl").value.trim(),time:$("#rtm").value||"09:00",date:t==="alarm"?"":$("#rd").value,rep:$("#rr").value,hindu:$("#rh").checked})};$("#rd").value=lds(new Date());syncForm();renderList();setInterval(tick,10000);
 $("#rl").onclick=e=>{const x=e.target.closest("[data-x]"),d=e.target.closest("[data-d]");
 if(x){items=items.filter(i=>i.id!==x.dataset.x)}else if(d){const it=items.find(i=>i.id===d.dataset.d);if(it)it.done=d.checked}else return;save();renderList();render()};
 $("#en").onclick=async()=>{const m=[];try{await ctx().resume();setTimeout(sound("notif"),2500);m.push("Sound on")}catch(e){m.push("Sound unavailable")}
@@ -499,7 +502,7 @@ list.push({t:b.peak.time.date.getTime(),k:b.kind,solar:1,vis:b.peak.altitude>0,s
 list.sort((p,q)=>p.t-q.t);const f=v=>new Intl.DateTimeFormat(loc(),{timeZone:L.tz,weekday:"short",day:"numeric",month:"short",year:"numeric",hour:"numeric",minute:"2-digit",hour12:true}).format(v);
 ecc[k]='<ul class="ql">'+list.slice(0,5).map(e=>`<li><span><b>${T(e.solar?"Surya Grahan (solar)":"Chandra Grahan (lunar)")}, ${T(e.k)}</b> · ${T("peak")} ${f(e.t)}<br><small>${e.vis?T("Visible from {c}").replace("{c}",L.name)+(e.pen?" ("+T("faint penumbral shading, no sutak")+")":". "+T("Sutak begins")+" "+f(e.t-e.sut*36e5)):T("Not visible from {c} (below the horizon at peak)").replace("{c}",L.name)}</small></span></li>`).join("")+"</ul>";box.innerHTML=ecc[k]}catch(e){box.textContent="Eclipse search is not available in this view."}}
 async function evs(){const out=[];for(let i=0;i<366;i++){const c=Date.UTC(y,0,1)+i*D;if(new Date(c).getUTCFullYear()!==y)break;const d=day(L,c),t=tithi(d.sr),x=mon(d.sr);
-fest(L,c).forEach(z=>out.push({c,s:z,info:INFO[z]||""}));itemsOn(c,t,x).forEach(it=>{if(!(it.type==="alarm"&&it.rep==="daily"))out.push({c,s:ico(it)+" "+it.title,tm:isB(it)?"":it.time})});if(i%30===29)await new Promise(r=>setTimeout(r))}return out}
+fest(L,c).forEach(z=>out.push({c,s:z,info:INFO[z]||""}));itemsOn(c,t,x).forEach(it=>{if(!(it.type==="alarm"&&it.rep==="daily"))out.push({c,s:ico(it)+" "+it.title,tm:noT(it)?"":it.time})});if(i%30===29)await new Promise(r=>setTimeout(r))}return out}
 const h12=hm=>{const h=+hm.slice(0,2);return (h%12||12)+":"+hm.slice(3,5)+(h<12?" AM":" PM")};
 const csv=ev=>"Subject,Start Date,Start Time,End Date,End Time,All Day Event,Description\n"+ev.map(e=>{const q=v=>'"'+String(v).replace(/"/g,'""')+'"',[Y,M,Dd]=new Date(e.c).toISOString().slice(0,10).split("-"),sd=M+"/"+Dd+"/"+Y,tt=e.tm?h12(e.tm):"";return [q(e.s),sd,tt,sd,tt,e.tm?"False":"True",q(e.info||"")].join(",")}).join("\n");
 const ics=ev=>{const st=new Date().toISOString().replace(/[-:]|\.\d+/g,"");return "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Panchang//EN\r\n"+ev.map((e,i)=>{const d8=new Date(e.c).toISOString().slice(0,10).replace(/-/g,"");return "BEGIN:VEVENT\r\nUID:"+i+"-"+d8+"@panchang\r\nDTSTAMP:"+st+"\r\n"+(e.tm?`DTSTART:${d8}T${e.tm.replace(":","")}00\r\nDURATION:PT30M\r\n`:`DTSTART;VALUE=DATE:${d8}\r\n`)+"SUMMARY:"+e.s.replace(/[,;\r\n]/g," ")+"\r\nEND:VEVENT\r\n"}).join("")+"END:VCALENDAR\r\n"};
@@ -536,7 +539,7 @@ document.querySelectorAll("[data-t]").forEach(e=>e.textContent=T(e.dataset.t));f
 function setLang(c,boot){ST.lang=c;saveST();TRL=getPack(c);applyLang();if(!boot&&TRL)fill(c,TRL)}
 // birth chart
 let ME=null;try{ME=JSON.parse(lsGet("panchang-me")||"null")}catch(e){}
-const saveME=()=>lsSet("panchang-me",JSON.stringify(ME)),dr=n=>n%9||9,sdg=z=>String(z).replace(/\D/g,"").split("").reduce((a,b)=>a+ +b,0);
+const saveME=()=>{const r=lsSet("panchang-me",JSON.stringify(ME));try{applySecs()}catch(e){}return r},dr=n=>n%9||9,sdg=z=>String(z).replace(/\D/g,"").split("").reduce((a,b)=>a+ +b,0);
 const BP=[["Delhi",28.61,77.21],["Mumbai",19.08,72.88],["Kolkata",22.57,88.36],["Chennai",13.08,80.27],["Bengaluru",12.97,77.59],["Hyderabad",17.39,78.49],["Pune",18.52,73.86],["Ahmedabad",23.02,72.57],["Jaipur",26.91,75.79],["Lucknow",26.85,80.95],["Patna",25.59,85.14],["Bhopal",23.26,77.41],["Chandigarh",30.73,76.78],["Varanasi",25.32,82.97],["Kochi",9.93,76.27],["Bhubaneswar",20.3,85.82],["Indore",22.72,75.86],["Nagpur",21.15,79.09],["Guwahati",26.14,91.74],["Amritsar",31.63,74.87],["Dehradun",30.32,78.03],["Ranchi",23.34,85.31]].map(b=>[...b,"Asia/Kolkata"]).concat([["London",51.51,-0.13,"Europe/London"],["New York",40.71,-74.01,"America/New_York"],["Dubai",25.2,55.27,"Asia/Dubai"]]);
 const COL=[["Orange","#e8761e"],["White","#f1f1f1"],["Red","#d62828"],["Green","#2e9e4f"],["Yellow","#f2c40f"],["Pink","#ee7fb0"],["Blue","#2f5fd0"]],MOODS="calm happy grateful anxious sad angry tired unmotivated confused fearful".split(" ");
 const NK=l=>{const w=360/27;return{i:Math.floor(l/w),p:Math.floor(l%w/(w/4))+1}},sidl=(b,dt)=>n360(Astronomy.Ecliptic(Astronomy.GeoVector(b,dt,true)).elon-23.853);
@@ -814,7 +817,7 @@ function applyBg(){const b=document.body;b.classList.toggle("bgimg",!!bgData);b.
 function loadBg(f){const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,1400/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext("2d").drawImage(im,0,0,c.width,c.height);bgData=c.toDataURL("image/jpeg",.8);if(!lsSet("panchang-bg",bgData))$("#msg").textContent="The picture is too large to save, so it is used for this visit only.";applyBg()};im.onerror=()=>{$("#msg").textContent="That file is not a picture this page can read."};im.src=r.result};r.readAsDataURL(f)}
 $("#slg").innerHTML=Object.entries(LANGS).map(([k,v])=>`<option value="${k}">${v[0]}</option>`).join("");$("#slg").value=ST.lang||"en";$("#slg").onchange=e=>setLang(e.target.value);setLang(ST.lang||"en",true);$("#sth").value=ST.theme;$("#dim").value=ST.dim;applyTheme(false);applyBg();
 const SECS=[["me","Your day"],["dc","Today's cards"],["cy","Cycle tracker"],["sc-fl","Festivals this month"],["sc-vr","Vrat days this month"],["sc-ec","Upcoming eclipses"],["nw","News today"],["ev","Professional events"],["gm","Bills & travel"],["mf","Muhurat finder"],["sc-ex","Export & share"],["sc-cp","Same festival, different cities"],["rm","Reminders & alarms"]];
-function applySecs(){const h=ST.hide||[],cl=ST.col||[];for(const[i]of SECS){const e=document.getElementById(i);if(e){e.hidden=h.includes(i)||(i==="cy"&&!(ME&&ME.gender==="F"));e.classList.toggle("col",cl.includes(i))}}
+function applySecs(){const h=ST.hide||[],cl=ST.col||[];try{const cb=document.querySelector('[data-s="cy"]');if(cb)cb.closest("label").hidden=!(ME&&ME.gender==="F")}catch(e){}for(const[i]of SECS){const e=document.getElementById(i);if(e){e.hidden=h.includes(i)||(i==="cy"&&!(ME&&ME.gender==="F"));e.classList.toggle("col",cl.includes(i))}}
 const st=$("#st");if(st)st.hidden=false;try{const nw=$("#nw");if(nw&&!nw.hidden&&typeof loadNews==="function"&&!$("#nwl").innerHTML)loadNews()}catch(e){}const vc=$("#vc");if(vc)vc.textContent="";
 document.querySelectorAll("#shl input").forEach(c=>c.checked=!h.includes(c.dataset.s))}
 document.addEventListener("click",e=>{const h=e.target.closest("section.cm>h3:first-child");if(!h)return;const id=h.parentElement.id;if(!id)return;const c=new Set(ST.col||[]);c.has(id)?c.delete(id):c.add(id);ST.col=[...c];saveST();applySecs()});
@@ -1103,7 +1106,7 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape"){const d=q$("#shd");
 // ---- follow my location (updates region when enabled) ----
 const geoBtn=q$("#geo");if(geoBtn)geoBtn.addEventListener("click",()=>{if(!(ST.rgDone&&ST.reg&&ST.reg.follow!==false)||!navigator.geolocation)return;navigator.geolocation.getCurrentPosition(async p=>{const r=await regionFromCoords(p.coords.latitude,p.coords.longitude);if(r.cc&&(r.cc!==ST.reg.cc||(r.cc==="IN"&&r.st&&r.st!==ST.reg.st))){ST.reg=Object.assign({},ST.reg,{cc:r.cc,st:r.cc==="IN"?(r.st||ST.reg.st):""});profileChanged()}},()=>{},{timeout:9000,maximumAge:6e5})});
 // ---- start ----
-function boot(){mount();ensureCard();sumSet();sumBackup();paintLC();checkLock();try{onbMaybe();tabsVis()}catch(e){}const go=()=>rescan();("requestIdleCallback"in window)?requestIdleCallback(go,{timeout:3000}):setTimeout(go,1200);
+function boot(){mount();ensureCard();sumSet();sumBackup();paintLC();checkLock();try{onbMaybe();tabsVis()}catch(e){}try{upMount();upNudge()}catch(e){}const go=()=>rescan();("requestIdleCallback"in window)?requestIdleCallback(go,{timeout:3000}):setTimeout(go,1200);
 let tm=0;const again=()=>{clearTimeout(tm);tm=setTimeout(rescan,900)};["#city","#lat","#lon","#tz"].forEach(s=>{const e=q$(s);if(e)e.addEventListener("change",again)});if(geoBtn)geoBtn.addEventListener("click",()=>setTimeout(again,3000))}
 // ---- welcome tour (intro) and first-run setup ----
 const INTRO_VIDEO="";/* put a video file name or link here (for example "intro.mp4") to play a real video instead of the animated tour */
@@ -1157,6 +1160,34 @@ function tabsVis(){const b=document.querySelector('#tb button[data-tab="exp"]');
 const cur_tab=()=>{const p=document.querySelector(".pg:not([hidden])");return p?p.id.replace("pg-",""):""};
 {const a0=applySecs;applySecs=function(){a0();try{tabsVis()}catch(e){}}}
 function onbMaybe(){if(ST.onb)return;let has=false;try{has=!!(ME||ST.rgDone||ls.g("panchang-items"))}catch(e){}if(has){ST.onb=1;saveST();return}document.documentElement.classList.add("obo");tour(0)}
+
+// ---- supporter plan (card, soft prompts, gates) ----
+const PAYWALL_ON=false;/* flip to true only after Google Play Billing is connected; until then everything stays free */
+const PRICES={IN:{c:"₹",m:49,y:399},US:{c:"$",m:1.99,y:14.99},GB:{c:"£",m:1.99,y:14.99},CA:{c:"CA$",m:2.49,y:19.99},AU:{c:"A$",m:2.99,y:22.99},AE:{c:"AED ",m:7.99,y:59.99},SG:{c:"S$",m:2.49,y:18.99},_:{c:"$",m:1.99,y:14.99}};
+const FREE_NOTES=10,TRIAL_DAYS=7;
+const priceOf=()=>PRICES[(regProf().cc)]||PRICES._,fmt=(c,n)=>c+(n%1?n.toFixed(2):n);
+function isPro(){if(!PAYWALL_ON)return true;const s=ST.sub;if(!s)return false;const now=Date.now();if(s.until&&now<s.until)return true;return false}
+function subLine(){const s=ST.sub;if(!PAYWALL_ON)return "Everything is free for now. Thank you for using kalaNDR.";if(isPro())return s.trial?"Free trial active until "+new Date(s.until).toLocaleDateString():"Supporter plan active until "+new Date(s.until).toLocaleDateString();return "Free plan"}
+function upCard(){const p=priceOf(),sv=Math.round((1-p.y/(p.m*12))*100);return `<h3>kalaNDR Supporter</h3><p class="note" style="margin:0 0 8px">${X(subLine())}</p>
+<div class="upg"><label class="upo"><input type="radio" name="upl" value="y" checked><span><b>Yearly ${fmt(p.c,p.y)}</b> <em>Best value, save ${sv}%</em><br><small>${fmt(p.c,Math.round(p.y/12*100)/100)} a month</small></span></label><label class="upo"><input type="radio" name="upl" value="m"><span><b>Monthly ${fmt(p.c,p.m)}</b><br><small>Cancel any time</small></span></label></div>
+<p style="margin:8px 0 2px"><b>Supporter gets</b></p><ul class="upl"><li>Share any day as a kalaNDR picture</li><li>Unlimited notes to remember (free plan: ${FREE_NOTES})</li><li>Your daily personal reading and Gita thought</li><li>Cloud sync across your devices</li></ul>
+<p style="margin:6px 0 2px"><b>Always free</b></p><ul class="upl"><li>Panchang, festivals, Choghadiya, Rahu Kaal</li><li>Your state, country and community festivals</li><li>Reminders, alarms, backup and PIN lock</li></ul>
+<p style="margin:10px 0 0"><button class="obp" id="upgo" style="background:var(--ac);color:#fff;border:0;border-radius:22px;padding:10px 22px">Start ${TRIAL_DAYS}-day free trial</button></p><span id="upm" class="note" role="status"></span>
+<p class="note" style="margin:6px 0 0">Cancel any time in Google Play. Prices follow your country.</p>`}
+function upMount(){const pg=q$("#pg-set");if(!pg||q$("#upc"))return;const s=document.createElement("section");s.className="cm";s.id="upc";s.innerHTML=upCard();const a=q$("#bkp")||pg.firstElementChild;a?a.after(s):pg.append(s)}
+function upsell(why){const d=document.createElement("div");d.id="upd";d.setAttribute("role","dialog");d.innerHTML=`<div class="upb"><h3>${X(why)}</h3><p class="note">This is part of kalaNDR Supporter. Try it free for ${TRIAL_DAYS} days.</p><div id="upz"></div><p style="margin:12px 0 0"><button id="upsee" class="obp" style="background:var(--ac);color:#fff;border:0;border-radius:22px;padding:10px 20px">See plans</button> <button id="upx">Not now</button></p></div>`;document.body.append(d)}
+function startBuy(plan){const m=q$("#upm");const B=window.KAL_BILL;if(B&&B.buy){B.buy(plan).then(r=>{if(r&&r.until){ST.sub={plan,until:r.until,trial:!!r.trial};saveST();upRefresh()}}).catch(()=>{if(m)m.textContent="Purchase did not complete."});return}
+if(m)m.textContent=PAYWALL_ON?"Purchase opens in the Play Store app.":"Paid plans are not open yet. Everything is free for now, thank you."}
+function upRefresh(){const c=q$("#upc");if(c)c.innerHTML=upCard()}
+function gate(why){if(isPro())return true;upsell(why);return false}
+document.addEventListener("click",e=>{const t=e.target.closest("button,[data-share]");if(!t)return;
+if(t.dataset&&t.dataset.share==="img"&&!isPro()){e.stopImmediatePropagation();e.preventDefault();upsell("Share as a picture");return}
+if(t.id==="upgo"){const r=document.querySelector('input[name="upl"]:checked');startBuy(r?r.value:"y")}
+else if(t.id==="upx"){const d=q$("#upd");if(d)d.remove()}
+else if(t.id==="upsee"){const d=q$("#upd");if(d)d.remove();const tb=document.querySelector('#tb button[data-tab="set"]');if(tb)tb.click();setTimeout(()=>{const c=q$("#upc");if(c)c.scrollIntoView({behavior:"smooth"})},150)}
+else if(t.id==="qa"&&q$("#qt")&&q$("#qt").value==="note"&&!isPro()&&JSON.parse(ls.g("panchang-items")||"[]").filter(i=>i.type==="note").length>=FREE_NOTES){e.stopImmediatePropagation();e.preventDefault();upsell("More than "+FREE_NOTES+" notes")}
+else if(t.id==="ra"&&q$("#rt")&&q$("#rt").value==="note"&&!isPro()&&JSON.parse(ls.g("panchang-items")||"[]").filter(i=>i.type==="note").length>=FREE_NOTES){e.stopImmediatePropagation();e.preventDefault();upsell("More than "+FREE_NOTES+" notes")}},true);
+function upNudge(){if(!PAYWALL_ON)return;if(!ST.fs){ST.fs=Date.now();saveST();return}if(isPro()||ST.upSeen||Date.now()-ST.fs<7*864e5||q$("#onb"))return;ST.upSeen=1;saveST();upsell("Enjoying kalaNDR?")}
 
 window.KAL={profileChanged,regionFromCoords,rescan,dayData,shareText,drawCard,nearestIN,normState,regReset,lc:()=>LC};
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot);else boot();
