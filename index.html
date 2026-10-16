@@ -102,6 +102,7 @@ html.obo body>*:not(#onb):not(#lk){visibility:hidden!important}
 
 .tdy{background:linear-gradient(160deg,#FFF3D6,#F7DDA0);color:#3D2A18;border:1px solid #E3A32C;border-radius:16px;padding:12px 14px;margin:8px 0}.tdh{display:flex;justify-content:space-between;font-size:.85rem;color:#7B5A28}.tdk{font-weight:700}.tdm{font:400 1.45rem/1.2 "Tiro Devanagari Hindi",Georgia,serif;margin:6px 0 2px}.tdf{font-weight:600;color:#A04A00;margin-bottom:8px}.tdg{display:grid;grid-template-columns:1fr 1fr;gap:6px 12px}.tdg small{display:block;color:#7B5A28;font-size:.75rem}.tdg b{font-size:.92rem}.tdb{margin-top:10px;border-radius:18px}
 #det.cmp .xt{display:none}.mrt{margin:6px 0}
+html.kapp #acct{display:none}
 </style></head><body><svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="kl" viewBox="0 0 512 512"><defs><linearGradient id="klg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFAE4D"/><stop offset="1" stop-color="#D4540A"/></linearGradient>
 <mask id="klm"><rect width="512" height="512" fill="#fff"/><circle cx="296" cy="232" r="84" fill="#000"/></mask></defs>
 <rect width="512" height="512" rx="116" fill="url(#klg)"/>
@@ -1112,7 +1113,7 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape"){const d=q$("#shd");
 // ---- follow my location (updates region when enabled) ----
 const geoBtn=q$("#geo");if(geoBtn)geoBtn.addEventListener("click",()=>{if(!(ST.rgDone&&ST.reg&&ST.reg.follow!==false)||!navigator.geolocation)return;navigator.geolocation.getCurrentPosition(async p=>{const r=await regionFromCoords(p.coords.latitude,p.coords.longitude);if(r.cc&&(r.cc!==ST.reg.cc||(r.cc==="IN"&&r.st&&r.st!==ST.reg.st))){ST.reg=Object.assign({},ST.reg,{cc:r.cc,st:r.cc==="IN"?(r.st||ST.reg.st):""});profileChanged()}},()=>{},{timeout:9000,maximumAge:6e5})});
 // ---- start ----
-function boot(){mount();ensureCard();sumSet();sumBackup();paintLC();checkLock();try{onbMaybe();tabsVis()}catch(e){}try{setGroups();fsMount();todayCard();compactDet();upMount();upNudge()}catch(e){}const go=()=>rescan();("requestIdleCallback"in window)?requestIdleCallback(go,{timeout:3000}):setTimeout(go,1200);
+function boot(){mount();ensureCard();sumSet();sumBackup();paintLC();checkLock();try{onbMaybe();tabsVis()}catch(e){}try{ntMount();planSync(3000)}catch(e){}try{setGroups();fsMount();todayCard();compactDet();upMount();upNudge()}catch(e){}const go=()=>rescan();("requestIdleCallback"in window)?requestIdleCallback(go,{timeout:3000}):setTimeout(go,1200);
 let tm=0;const again=()=>{clearTimeout(tm);tm=setTimeout(rescan,900)};["#city","#lat","#lon","#tz"].forEach(s=>{const e=q$(s);if(e)e.addEventListener("change",again)});if(geoBtn)geoBtn.addEventListener("click",()=>setTimeout(again,3000))}
 // ---- welcome tour (intro) and first-run setup ----
 const INTRO_VIDEO="";/* put a video file name or link here (for example "intro.mp4") to play a real video instead of the animated tour */
@@ -1230,6 +1231,36 @@ for(const[id,wid,title]of[["locb","locd","Location and month names"],["shw","shd
 const me=q$("#pg-me"),ac=q$("#acct");if(me&&ac)me.append(ac)}
 document.addEventListener("click",e=>{const t=e.target;if(t.id==="mrb"){detOpen=!detOpen;compactDet()}else if(t.id==="fsg")fsRun();else if(t.id==="insgo"&&ipr){ipr.prompt();ipr=null;const i=q$("#ins");if(i)i.remove()}else if(t.id==="insx"){ST.insHide=1;saveST();const i=q$("#ins");if(i)i.remove()}});
 document.addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.id==="fsq"){e.preventDefault();fsRun()}});
+
+// ---- v38: Android app bridge (background alerts and widget) ----
+const NT_DEF={daily:true,dailyAt:"06:30",eve:true,eveAt:"20:00",rem:true};
+const ntS=()=>Object.assign({},NT_DEF,ST.nt||{}),KA=()=>window.KalAndroid||null;
+function planBuild(N){N=N||60;const s=ntS(),n=new Date(),c0=Date.UTC(n.getFullYear(),n.getMonth(),n.getDate()),days=[],ev=[],now=Date.now();
+const at=(c,hm)=>{const q=new Date(c);return new Date(q.getUTCFullYear(),q.getUTCMonth(),q.getUTCDate(),+hm.slice(0,2),+hm.slice(3,5)).getTime()};
+for(let i=0;i<N;i++){const c=c0+i*D,d=day(L,c),t=tithi(d.sr),x=mon(d.sr),f=fest(L,c).map(z=>fn(z)),wd=new Date(c).getUTCDay(),u=(d.ss-d.sr)/8,rk=[8,2,7,5,6,4,3][wd],nk=((TRL&&TRL.n)||NAK)[Math.floor(moonL(d.sr)/(360/27))],iso=new Date(c).toISOString().slice(0,10);
+const dd={d:iso,t:pk(t).split(" ")[0]+" "+tname(t),m:ml(x,t),n:nk,f,sr:tmf(d.sr),ss:tmf(d.ss),rk:tmf(d.sr+(rk-1)*u)+" – "+tmf(d.sr+rk*u)};days.push(dd);
+if(s.daily)ev.push({id:"d"+iso,t:at(c,s.dailyAt),k:"daily",title:dd.t+" · "+dd.m,body:(f.length?f.join(", "):"No festival today")+" · Rahu Kaal "+dd.rk});
+if(s.eve&&i>0&&f.length)ev.push({id:"e"+iso,t:at(c-D,s.eveAt),k:"eve",title:"Tomorrow: "+f[0]+(f.length>1?" +"+(f.length-1):""),body:dd.t+" · "+dd.m});
+if(s.rem)try{itemsOn(c,t,x).forEach(it=>{if(it.type==="note"||it.off)return;const tm=noT(it)?"09:00":(it.time||"09:00");ev.push({id:"r"+it.id+iso,t:at(c,tm),k:it.type==="alarm"?"alarm":"rem",title:ico(it)+" "+it.title,body:it.type==="bday"?"Birthday today":it.type==="anniv"?"Anniversary today":it.type==="task"?"Task due":"Alarm"})})}catch(e){}}
+return{v:1,gen:now,loc:L.name,s,days,ev:ev.filter(e=>e.t>now-6e4).sort((a,b)=>a.t-b.t)}}
+let ntTm=0;function planSync(delay){if(!KA())return;clearTimeout(ntTm);ntTm=setTimeout(()=>{try{KA().sync(JSON.stringify(planBuild(60)))}catch(e){}ntStatus()},delay==null?1500:delay)}
+function ntStatus(){const el=q$("#ntst");if(!el)return;const a=KA();if(!a){el.innerHTML="Alerts and the home-screen widget work in the kalaNDR Android app, even when it is closed. In a browser, alerts only ring while this page is open.";return}let st={};try{st=JSON.parse(a.status()||"{}")}catch(e){}el.innerHTML=st.notif===false?'Notifications are off for kalaNDR on this phone. <button id="ntset">Open phone settings</button>':"Alerts are on. Work even when the app is closed."}
+function ntCard(){const s=ntS();return `<h3>Alerts &amp; widget</h3><p class="note" id="ntst" style="margin:0 0 8px"></p>
+<label class="rgl" style="margin:6px 0"><input type="checkbox" id="ntd"${s.daily?" checked":""}> Daily Panchang every morning at <input type="time" id="ntda" value="${X(s.dailyAt)}"></label>
+<label class="rgl" style="margin:6px 0"><input type="checkbox" id="nte"${s.eve?" checked":""}> The evening before a festival or vrat, at <input type="time" id="ntea" value="${X(s.eveAt)}"></label>
+<label class="rgl" style="margin:6px 0"><input type="checkbox" id="ntr"${s.rem?" checked":""}> My reminders, birthdays and alarms</label>
+<p style="margin:8px 0 0"><button id="ntt">Send a test alert</button></p>
+<p class="note" style="margin:6px 0 0">Widget: press and hold on your home screen, choose Widgets, then kalaNDR.</p>`}
+function ntMount(){const pg=q$("#pg-set");if(!pg||q$("#ntc"))return;const s=document.createElement("section");s.className="cm";s.id="ntc";s.innerHTML=ntCard();const a=q$("#upc");a?a.after(s):pg.prepend(s);ntStatus();if(KA()){document.documentElement.classList.add("play");ls.s("kalandr-play","1")}}
+function ntSave(){const s=ntS();s.daily=q$("#ntd").checked;s.eve=q$("#nte").checked;s.rem=q$("#ntr").checked;s.dailyAt=q$("#ntda").value||"06:30";s.eveAt=q$("#ntea").value||"20:00";ST.nt=s;saveST();if(KA()&&(s.daily||s.eve||s.rem)){try{KA().ask()}catch(e){}}planSync(300)}
+document.addEventListener("change",e=>{if(e.target.closest&&e.target.closest("#ntc"))ntSave()});
+document.addEventListener("click",e=>{const t=e.target;if(t.id==="ntt"){const m=KA();if(m)try{m.test()}catch(x){}else{const st=q$("#ntst");try{if(window.Notification&&Notification.permission!=="denied"){Notification.requestPermission().then(p=>{if(p==="granted")new Notification("kalaNDR test alert","Alerts are working.");else if(st)st.textContent="Notifications are blocked in this browser."})}else if(st)st.textContent="Notifications are blocked in this browser."}catch(x){}}}else if(t.id==="ntset"){try{KA().openSettings()}catch(x){}}});
+try{if(KA()&&KA().saveFile){document.documentElement.classList.add("kapp");const b64=b=>new Promise(r=>{const f=new FileReader();f.onload=()=>r(String(f.result).split(",")[1]||"");f.readAsDataURL(b)});
+const ac=HTMLAnchorElement.prototype.click;HTMLAnchorElement.prototype.click=function(){if(this.download&&/^blob:/.test(this.href)){const nm=this.download,u=this.href;fetch(u).then(r=>r.blob()).then(async b=>{KA().saveFile(nm,b.type||"application/octet-stream",await b64(b))}).catch(()=>{});return}return ac.apply(this,arguments)};
+navigator.canShare=()=>true;navigator.share=async d=>{if(d&&d.files&&d.files.length){const f=d.files[0];KA().shareFile(f.name,f.type||"image/png",await b64(f),d.text||"")}else KA().shareText((d&&(d.text||d.title))||"")}}}catch(e){}
+{const r1=render;render=function(){const r=r1.apply(this,arguments);planSync(4000);return r}}
+{const l1=renderList;renderList=function(){const r=l1.apply(this,arguments);planSync(800);return r}}
+document.addEventListener("visibilitychange",()=>{if(!document.hidden)planSync(1200)});
 
 window.KAL={profileChanged,regionFromCoords,rescan,dayData,shareText,drawCard,nearestIN,normState,regReset,lc:()=>LC};
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot);else boot();
